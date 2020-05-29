@@ -1,0 +1,6 @@
+include start
+cchar HCHAR 0x0100 [61*2]
+call OK add_wch $HCHAR
+call OK move 0 0
+call2 tmp2 tmp in_wch
+check tmp2 OK
