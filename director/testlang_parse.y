@@ -129,7 +129,6 @@ static void	validate(int, void *);
 static void	validate_return(const char *, const char *, int);
 static void	validate_variable(int, data_enum_t, const void *, int, int);
 static void	validate_byte(ct_data_t *, ct_data_t *, int);
-static void	validate_cchar(var_t *, var_t *, int);
 static void	write_cmd_pipe(char *);
 static void	write_cmd_pipe_args(data_enum_t, void *);
 static void	read_cmd_pipe(ct_data_t *);
@@ -260,7 +259,6 @@ call4		: CALL4 result result result result fn_name args eol {
 check		: CHECK var returns eol {
 	ct_data_t retvar;
 	var_t *vptr;
-	// This if condition is unsatisfiable (useless check). Data_index will never be -1. 
 	if (command.returns[0].data_index == -1)
 		err(1, "Undefined variable in check statement, line %zu"
 		    " of file %s", line, cur_file);
@@ -271,36 +269,24 @@ check		: CHECK var returns eol {
 		    enum_names[command.returns[1].data_type]);
 	}
 
-	if(command.returns[1].data_type == data_var 
-		&& vars[command.returns[1].data_index].type != 0){
-		command.returns[1].data_type = vars[command.returns[1].data_index].type;
-		command.returns[1].data_value = vars[command.returns[1].data_index].value;
-		command.returns[1].data_len = vars[command.returns[1].data_index].len;
-		command.returns[1].data_index = command.returns[1].data_index;
-	}
-
-	// fprintf(stderr, "==== %d ====\n", vars[command.returns[0].data_index].cchar.vals[0]);
-
-	 /*if (((command.returns[1].data_type == data_byte) &&
+	if (((command.returns[1].data_type == data_byte) &&
 	     (vars[command.returns[0].data_index].type != data_byte)) ||
-	    vars[command.returns[0].data_index].type != data_string) */
-	if(command.returns[1].data_type 
-		!= vars[command.returns[0].data_index].type)
+	    vars[command.returns[0].data_index].type != data_string)
 		err(1, "Var type %s (%d) does not match return type %s (%d)",
 		    enum_names[
 		    vars[command.returns[0].data_index].type],
 		    vars[command.returns[0].data_index].type,
 		    enum_names[command.returns[1].data_type],
-		    command.returns[1].data_type); 
+		    command.returns[1].data_type);
 
 	switch (command.returns[1].data_type) {
 	case data_err:
-		validate_variable(0, data_err, "ERR",
+		validate_variable(0, data_string, "ERR",
 				  command.returns[0].data_index, 0);
 		break;
 
 	case data_ok:
-		validate_variable(0, data_ok, "OK",
+		validate_variable(0, data_string, "OK",
 				  command.returns[0].data_index, 0);
 		break;
 
@@ -333,11 +319,6 @@ check		: CHECK var returns eol {
 		retvar.data_type = vptr->type;
 		retvar.data_value = vptr->value;
 		validate_byte(&retvar, &command.returns[1], 0);
-		break;
-	
-	case data_cchar:
-		validate_cchar(&vars[command.returns[0].data_index],
-				  &vars[command.returns[1].data_index], 0);
 		break;
 
 	default:
@@ -432,7 +413,6 @@ returns		: numeric { assign_rets(data_number, $1); }
 		| OK_RET { assign_rets(data_ok, NULL); }
 		| NULL_RET { assign_rets(data_null, NULL); }
 		| NON_NULL { assign_rets(data_nonnull, NULL); }
-		| var
 		;
 
 var		: VARNAME {
@@ -833,9 +813,6 @@ assign_rets(data_enum_t ret_type, void *ret)
 	ct_data_t *temp, cur;
 	char *ret_str;
 	ct_data_t *ret_ret;
-
-	if(ret_type == data_var)
-		fprintf(stderr, " ----- %s ----\n", (char*)ret);
 
 	cur.data_type = ret_type;
 	if (ret_type != data_var) {
@@ -1244,32 +1221,10 @@ do_function_call(size_t nresults)
 		if (command.returns[i].data_type != data_var) {
 			validate(i, &response[i]);
 		} else {
-			fprintf(stderr, "--- %s %d ---\n",
-			 	vars[command.returns[i].data_index].name, (int)response[i].data_len);
 			vars[command.returns[i].data_index].len =
 				response[i].data_len;
-			
-			void *str = malloc(2);
-			switch(response[i].data_type){
-				case data_cchar:
-					vars[command.returns[i].data_index].cchar =
-						*((cchar_t *)response[i].data_value);
-					break;
-				case data_ok:
-					memcpy(str, "OK", 2);
-					vars[command.returns[i].data_index].value = str;
-					break;
-				default:
-					err(2, "Incorrect return for function");
-			}
-			/*if(response[i].data_type == data_cchar){
-				vars[command.returns[i].data_index].cchar =
-					*((cchar_t *)response[i].data_value);
-			}
-			else{
-				vars[command.returns[i].data_index].value =
-					response[i].data_value;
-			}*/
+			vars[command.returns[i].data_index].value =
+				response[i].data_value;
 			vars[command.returns[i].data_index].type =
 				response[i].data_type;
 		}
@@ -1563,34 +1518,6 @@ validate_byte(ct_data_t *expected, ct_data_t *value, int check)
 		    (check == 0)? "matching" : "not matching", line, cur_file);
 	if (verbose) {
 		fprintf(stderr, "Validated expected %s byte stream "
-		    "at line %zu of file %s\n",
-		    (check == 0)? "matching" : "not matching",
-		    line, cur_file);
-	}
-}
-
-/*
- * cchar_t
- * Validate the return value against the expected value, throw an error
- * if they don't match expectations.
- */
-static void
-validate_cchar(var_t *expected, var_t *value, int check)
-{
-	/*
-	 * If check is 0 then we want to throw an error IFF the byte streams
-	 * do not match, if check is 1 then throw an error if the byte
-	 * streams match.
-	 */
-	if (((check == 0) && memcmp((void *)&expected->cchar, (void *)&value->cchar,
-				    sizeof(cchar_t)) != 0) ||
-	    ((check == 1) && memcmp((void *)&expected->cchar, (void *)&value->cchar, 
-		 sizeof(cchar_t)) == 0))
-		errx(1, "Validate expected %s cchar at line %zu"
-		    "of file %s",
-		    (check == 0)? "matching" : "not matching", line, cur_file);
-	if (verbose) {
-		fprintf(stderr, "Validated expected %s cchar "
 		    "at line %zu of file %s\n",
 		    (check == 0)? "matching" : "not matching",
 		    line, cur_file);

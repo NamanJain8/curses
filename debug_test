@@ -23,7 +23,6 @@ usage() {
 	echo "	  -L : Add the argument as a prefix to LD_LIBRARY_PATH to"
 	echo "	       use an alternate libcurses version"
 	echo "    -s : Specify the slave command.  Defaults to \"../slave/slave\""
-	echo "    -g : Generate check file iff not exists"
 	echo "    -v : Enable verbose output"
 	echo
 }
@@ -31,7 +30,7 @@ usage() {
 #
 ARGS="-T ${BASEDIR} -I ${INCLUDE_PATH} -C ${CHECK_PATH}"
 #
-while getopts cf:L:s:vg opt
+while getopts cf:L:s:v opt
 do
     case "${opt}" in
 	c)
@@ -56,10 +55,6 @@ do
 
 	v)
 	    ARGS="-v ${ARGS}"
-	    ;;
-	
-	g)
-	    ARGS="-g ${ARGS}"
 	    ;;
 
 	\?)

@@ -1,2 +1,1 @@
 call 0x15 killchar
-call2 OK 0x15 killwchar

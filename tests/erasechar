@@ -1,2 +1,2 @@
+include start
 call 0x08 erasechar
-call2 OK 0x08 erasewchar

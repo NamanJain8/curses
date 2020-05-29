@@ -441,13 +441,12 @@ cmd_deleteln(int nargs, char **args)
 void
 cmd_echochar(int nargs, char **args)
 {
-	chtype *ch;
 	if (check_arg_count(nargs, 1) == 1)
 		return;
-	ch = (chtype *) args[0];
+
 	/* XXX causes refresh */
 	report_count(1);
-	report_return(echochar(ch[0]));
+	report_return(echochar(args[0][0]));
 }
 
 
@@ -5034,7 +5033,7 @@ void
 cmd_wechochar(int nargs, char **args)
 {
 	WINDOW *win;
-	chtype *ch;
+	int ch;
 
 	if (check_arg_count(nargs, 2) == 1)
 		return;
@@ -5045,15 +5044,14 @@ cmd_wechochar(int nargs, char **args)
 		return;
 	}
 
-	// if (sscanf(args[1], "%p", &ch) == 0) {
-	// 	report_count(1);
-	// 	report_error("BAD ARGUMENT");
-	// 	return;
-	// }
-	ch = (chtype *) args[1];
+	if (sscanf(args[1], "%d", &ch) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
 
 	report_count(1);
-	report_return(wechochar(win, ch[0]));
+	report_return(wechochar(win, ch));
 }
 
 
@@ -6296,9 +6294,9 @@ cmd_addwstr(int nargs, char **args)
 {
 	if (check_arg_count(nargs, 1) == 1)
 		return;
-	
+
 	report_count(1);
-	report_return(addwstr((wchar_t *) args[0]));
+	report_error("UNSUPPORTED");
 }
 
 
@@ -6687,13 +6685,11 @@ cmd_wget_wstr(int nargs, char **args)
 void
 cmd_in_wch(int nargs, char **args)
 {
-	cchar_t c;
-	if (check_arg_count(nargs, 0) == 1)
+	if (check_arg_count(nargs, 1) == 1)
 		return;
 
-	report_count(2);
-	report_return(in_wch(&c));
-	report_cchar(c);
+	report_count(1);
+	report_error("UNSUPPORTED");
 }
 
 
@@ -6834,13 +6830,9 @@ cmd_innwstr(int nargs, char **args)
 void
 cmd_inwstr(int nargs, char **args)
 {
-	// wchar_t string[256];
-	if (check_arg_count(nargs, 0) == 1)
+	if (check_arg_count(nargs, 1) == 1)
 		return;
 
-	// report_count(2);
-	// report_return(inwstr(string));
-	// report_status(string);
 	report_count(1);
 	report_error("UNSUPPORTED");
 }
@@ -7015,7 +7007,7 @@ cmd_killwchar(int nargs, char **args)
 
 	/* XXX - call2 */
 	report_count(2);
-	report_return(killwchar(&ch));
+	report_return(erasewchar(&ch));
 	report_int(ch);
 }
 

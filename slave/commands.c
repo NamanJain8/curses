@@ -59,12 +59,6 @@ command_execute(char *func, int nargs, char **args)
 	while (i < ncmds) {
 		if (strcasecmp(func, commands[i].name) == 0) {
 			/* matched function */
-			// if(strcasecmp(commands[i].name, "add_wch") == 0){
-			// 	cchar_t *c = (cchar_t *)args[0];
-			// 	char *s;
-			// 	asprintf(&s, "%d", c->vals[0]);
-			// 	report_status(s);
-			// }
 			commands[i].func(nargs, args);
 			return;
 		}
@@ -228,30 +222,6 @@ report_nstr(chtype *string)
 		    __func__);
 
 	if (write(slvpipe[WRITE_PIPE], string, len) < 0)
-		err(1, "%s: command pipe write of status data failed",
-		    __func__);
-}
-
-/*
- * Report a string of cchar back to the director via the command pipe.
- */
-void
-report_cchar(cchar_t c)
-{
-	int len, type;
-
-	len = sizeof(cchar_t);
-
-	type = data_cchar;
-	if (write(slvpipe[WRITE_PIPE], &type, sizeof(int)) < 0)
-		err(1, "%s: command pipe write for status type failed",
-		    __func__);
-
-	if (write(slvpipe[WRITE_PIPE], &len, sizeof(int)) < 0)
-		err(1, "%s: command pipe write for status length failed",
-		    __func__);
-
-	if (write(slvpipe[WRITE_PIPE], &c, len) < 0)
 		err(1, "%s: command pipe write of status data failed",
 		    __func__);
 }

@@ -45,7 +45,6 @@ void report_return(int);
 void report_nstr(chtype *);
 void report_status(const char *);
 void report_ptr(void *);
-void report_cchar(cchar_t);
 int  check_arg_count(int, int);
 
 #endif
