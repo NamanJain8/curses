@@ -156,6 +156,7 @@ VARNAME		[A-Za-z][A-Za-z0-9_-]+
 NULL_RET	NULL
 NON_NULL	NON_NULL
 CCHAR		[cC][cC][hH][aA][rR]
+WCHAR		[wW][cC][hH][aA][rR]
 BYTE		BYTE
 OR		\|
 LHB		\(
@@ -296,6 +297,10 @@ include		BEGIN(incl);
 
 {CCHAR}	{
 			return CCHAR;
+		}
+
+{WCHAR} {
+			return WCHAR;
 		}
 
 {OR}		{

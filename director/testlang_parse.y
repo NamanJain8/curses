@@ -88,7 +88,7 @@ static unsigned nvals;		/* number of wchars */
 #define WRITE_PIPE 1
 
 const char *enum_names[] = {
-	"unused", "static", "numeric", "string", "byte", "cchar", "ERR", "OK", "NULL",
+	"unused", "static", "numeric", "string", "byte", "cchar", "wchar", "ERR", "OK", "NULL",
 	"not NULL", "variable", "reference", "returns count", "slave error"
 };
 
@@ -143,6 +143,7 @@ static char	*numeric_or(char *, char *);
 static char	*get_numeric_var(const char *);
 static void	perform_delay(struct timespec *);
 static void	set_cchar(char *, void *);
+static void set_wchar(char *);
 static wchar_t	*add_to_vals(data_enum_t, void *);
 
 static const char *input_functions[] = {
@@ -182,6 +183,7 @@ extern saved_data_t saved_output;
 %token <string> COMPAREND
 %token <string> ASSIGN
 %token <string> CCHAR
+%token <string> WCHAR
 %token EOL CALL CHECK NOINPUT OR MULTIPLIER LHB RHB LHSB RHSB
 %token CALL2 CALL3 CALL4 DRAIN
 
@@ -202,6 +204,7 @@ statement	:	/* empty */
 		| compare statement
 		| comparend statement
 		| cchar statement
+		| wchar statement
 		| eol statement
 		;
 
@@ -217,6 +220,11 @@ cchar		: CCHAR VARNAME attributes char_vals eol
 			}
 		;
 
+wchar		: WCHAR VARNAME char_vals eol
+			{
+				set_wchar($2);
+			}
+		;
 
 attributes	: numeric
 		| LHB expr RHB
@@ -723,6 +731,34 @@ set_cchar(char *name, void *attributes)
 	vars[i].cchar.elements = nvals;
 	for (j = 0; j < nvals; j++) 
 		vars[i].cchar.vals[j] = vals[j];
+
+	nvals = 0;
+	vals = NULL;
+
+}
+
+/*
+ * Form up a wide character string type from the given components.
+ */
+static void
+set_wchar(char *name)
+{
+	int i;
+	unsigned j;
+	wchar_t *wcval;
+
+	i = find_var_index(name);
+	if (i < 0)
+		i = assign_var(name);
+
+	vars[i].type = data_wchar;
+	vars[i].len = nvals * sizeof(wchar_t);
+	vars[i].value = malloc(vars[i].len);
+	if (vars[i].value == NULL)
+		err(1, "Could not malloc memory to assign wchar string");
+	wcval = vars[i].value;
+	for(j = 0; j < nvals; j++)
+		wcval[j] = vals[j];
 
 	nvals = 0;
 	vals = NULL;
@@ -1637,6 +1673,10 @@ write_cmd_pipe_args(data_enum_t type, void *data)
 			cmd = (void *) &var_data->cchar;
 			len = sizeof(cchar_t);
 			break;
+		
+		case data_wchar:
+			send_type = data_wchar;
+			break;
 
 		default:
 			send_type = data_string;
@@ -1673,6 +1713,9 @@ write_cmd_pipe_args(data_enum_t type, void *data)
 		if (send_type == data_cchar)
 			fprintf(stderr,
 			    "Writing cchar to command pipe\n");
+		else if (send_type == data_wchar)
+			fprintf(stderr,
+			    "Writing wchar(%d sized) to command pipe\n", len);
 		else
 			fprintf(stderr,
 			    "Writing length %d to command pipe\n", len);

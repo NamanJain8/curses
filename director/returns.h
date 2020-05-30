@@ -38,6 +38,7 @@ typedef enum {
 	data_string,
 	data_byte,
 	data_cchar,
+	data_wchar,
 	data_err,
 	data_ok,
 	data_null,

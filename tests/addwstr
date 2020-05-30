@@ -1,5 +1,5 @@
 include start
-cchar HCHAR 0x0000 [0x41, 0x41]
-call OK add_wch $HCHAR
-call OK move 0 0
-call `\000A` inch
+wchar CHAR [0x41, 0x42, 0x3401, 0x00]
+call OK addwstr $CHAR
+call OK refresh
+call2 0 4 getyx STDSCR
