@@ -283,9 +283,14 @@ check		: CHECK var checkval eol {
 		    enum_names[command.returns[1].data_type]);
 	}
 
+	/*
+	 * Check if both have same data types, else they will have
+	 * data_string type
+	 */
 	if (((command.returns[1].data_type == data_byte) &&
 	     (vars[command.returns[0].data_index].type != data_byte)) ||
-	    vars[command.returns[0].data_index].type != data_string)
+	   ((command.returns[1].data_type == data_cchar) &&
+	     (vars[command.returns[0].data_index].type != data_cchar)))
 		err(1, "Var type %s (%d) does not match return type %s (%d)",
 		    enum_names[
 		    vars[command.returns[0].data_index].type],
@@ -295,13 +300,9 @@ check		: CHECK var checkval eol {
 
 	switch (command.returns[1].data_type) {
 	case data_err:
-		validate_variable(0, data_string, "ERR",
-				  command.returns[0].data_index, 0);
-		break;
-
 	case data_ok:
-		validate_variable(0, data_string, "OK",
-				  command.returns[0].data_index, 0);
+		validate_type(vars[command.returns[0].data_index].type,
+			&command.returns[1], 0);
 		break;
 
 	case data_null:
@@ -333,6 +334,11 @@ check		: CHECK var checkval eol {
 		retvar.data_type = vptr->type;
 		retvar.data_value = vptr->value;
 		validate_byte(&retvar, &command.returns[1], 0);
+		break;
+
+	case data_cchar:
+		validate_cchar(&vars[command.returns[0].data_index].cchar,
+			command.returns[1].data_value, 0);
 		break;
 
 	default:
@@ -884,7 +890,10 @@ assign_rets(data_enum_t ret_type, void *ret)
 				err(1, "Undefined variable reference");
 			if(chkflag){
 				cur.data_type = vars[cur.data_index].type;
-				cur.data_value = vars[cur.data_index].value;
+				if(cur.data_type == data_cchar)
+					cur.data_value = &vars[cur.data_index].cchar;
+				else
+					cur.data_value = vars[cur.data_index].value;
 				cur.data_len = vars[cur.data_index].len;
 			}
 		}

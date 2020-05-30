@@ -3,7 +3,8 @@ call OK addstr "ABCDE"
 call OK refresh
 call2 1 STR1 mvinnstr 0 0 2
 call2 1 STR2 mvinnstr 0 0 2
-call OK move 2 5
+call okvar move 2 5
+check okvar OK
 call2 Y1 X1 getyx STDSCR
 call2 Y2 X2 getyx STDSCR
 check STR1 $STR2
