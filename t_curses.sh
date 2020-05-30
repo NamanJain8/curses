@@ -1,5 +1,20 @@
+utf=`locale -a | grep -i en_US.UTF-8`
 
-h_run()
+w_run(){
+	if [ -z "${utf}" ]; then
+		atf_fail "locale not available"
+	else
+		export LC_ALL=$utf
+		r_run $@
+	fi
+}
+
+h_run(){
+	export LC_ALL=C
+	r_run $@ 
+}
+
+r_run()
 {
 	file="$(atf_get_srcdir)/tests/${1}"
 
