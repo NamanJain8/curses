@@ -745,7 +745,7 @@ cmd_standend(int nargs, char **args)
 		return;
 
 	report_count(1);
-	report_return(standend());
+	report_int(standend());
 }
 
 
@@ -756,7 +756,7 @@ cmd_standout(int nargs, char **args)
 		return;
 
 	report_count(1);
-	report_return(standout());
+	report_int(standout());
 }
 
 
@@ -787,7 +787,7 @@ cmd_underscore(int nargs, char **args)
 		return;
 
 	report_count(1);
-	report_return(underscore());
+	report_int(underscore());
 }
 
 
@@ -798,7 +798,7 @@ cmd_underend(int nargs, char **args)
 		return;
 
 	report_count(1);
-	report_return(underend());
+	report_int(underend());
 }
 
 
@@ -1157,7 +1157,7 @@ cmd_mvinch(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_int(mvinch(y, x));
+	report_byte(mvinch(y, x));
 }
 
 
@@ -1259,13 +1259,13 @@ cmd_mvinnstr(int nargs, char **args)
 
 	if ((string = malloc(count + 1)) == NULL) {
 		report_count(1);
-	report_error("MALLOC_FAILED");
+		report_error("MALLOC_FAILED");
 		return;
 	}
 
 	/* XXX call2 */
 	report_count(2);
-	report_return(mvinnstr(y, x, string, count));
+	report_int(mvinnstr(y, x, string, count));
 	report_status(string);
 	free(string);
 }
@@ -1711,7 +1711,7 @@ cmd_mvwinch(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_int(mvwinch(win, y, x));
+	report_byte(mvwinch(win, y, x));
 }
 
 
@@ -3362,7 +3362,7 @@ cmd_mvwinnstr(int nargs, char **args)
 
 	/* XXX call2 */
 	report_count(2);
-	report_return(mvwinnstr(win, y, x, string, count));
+	report_int(mvwinnstr(win, y, x, string, count));
 	report_status(string);
 	free(string);
 }
@@ -4815,7 +4815,7 @@ void
 cmd_wbkgdset(int nargs, char **args)
 {
 	WINDOW *win;
-	int ch;
+	chtype *ch;
 
 	if (check_arg_count(nargs, 2) == 1)
 		return;
@@ -4826,13 +4826,9 @@ cmd_wbkgdset(int nargs, char **args)
 		return;
 	}
 
-	if (sscanf(args[1], "%d", &ch) == 0) {
-		report_count(1);
-		report_error("BAD ARGUMENT");
-		return;
-	}
+	ch = (chtype *) args[1];
 
-	wbkgdset(win, ch); /* void return */
+	wbkgdset(win, *ch); /* void return */
 	report_count(1);
 	report_return(OK);
 }
@@ -5272,7 +5268,7 @@ cmd_winnstr(int nargs, char **args)
 
 	/* XXX - call2 */
 	report_count(2);
-	report_return(winnstr(win, string, count));
+	report_int(winnstr(win, string, count));
 	report_status(string);
 }
 
@@ -5617,7 +5613,7 @@ cmd_wstandend(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_return(wstandend(win));
+	report_int(wstandend(win));
 }
 
 
@@ -5636,7 +5632,7 @@ cmd_wstandout(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_return(wstandout(win));
+	report_int(wstandout(win));
 }
 
 
@@ -5720,7 +5716,7 @@ cmd_wunderend(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_return(wunderend(win));
+	report_int(wunderend(win));
 }
 
 
@@ -5739,7 +5735,7 @@ cmd_wunderscore(int nargs, char **args)
 	}
 
 	report_count(1);
-	report_return(wunderscore(win));
+	report_int(wunderscore(win));
 }
 
 
@@ -6158,33 +6154,84 @@ cmd_add_wch(int nargs, char **args)
 void
 cmd_wadd_wch(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	WINDOW *win;
+	cchar_t *ch;
+	if (check_arg_count(nargs, 2) == 1)
 		return;
 
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	ch = (cchar_t *) args[1];
+
 	report_count(1);
-	report_error("UNSUPPORTED");
+	report_return(wadd_wch(win, ch));
 }
 
 
 void
 cmd_mvadd_wch(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	int y, x;
+	cchar_t *ch;
+
+	if (check_arg_count(nargs, 3) == 1)
 		return;
 
+	if (sscanf(args[0], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	ch = (cchar_t *) args[2];
+
 	report_count(1);
-	report_error("UNSUPPORTED");
+	report_return(mvadd_wch(y, x, ch));
 }
 
 
 void
 cmd_mvwadd_wch(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	WINDOW *win;
+	int y, x;
+	cchar_t *ch;
+
+	if (check_arg_count(nargs, 4) == 1)
 		return;
+	
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[2], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	ch = (cchar_t *) args[3];
 
 	report_count(1);
-	report_error("UNSUPPORTED");
+	report_return(mvwadd_wch(win, y, x, ch));
 }
 
 

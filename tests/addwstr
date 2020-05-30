@@ -1,6 +1,5 @@
 include start
-cchar HCHAR 0x0100 [61*2]
+cchar HCHAR 0x0000 [0x41, 0x41]
 call OK add_wch $HCHAR
 call OK move 0 0
-call2 tmp2 tmp in_wch
-check tmp2 OK
+call `\000A` inch

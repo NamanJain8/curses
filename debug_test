@@ -30,7 +30,7 @@ usage() {
 #
 ARGS="-T ${BASEDIR} -I ${INCLUDE_PATH} -C ${CHECK_PATH}"
 #
-while getopts cf:L:s:v opt
+while getopts cf:L:s:vg opt
 do
     case "${opt}" in
 	c)
@@ -56,7 +56,11 @@ do
 	v)
 	    ARGS="-v ${ARGS}"
 	    ;;
-
+	
+	g)
+	    ARGS="-g ${ARGS}"
+		;;
+	
 	\?)
 	    usage
 	    exit 1
