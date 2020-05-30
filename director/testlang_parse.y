@@ -61,6 +61,7 @@ extern char *cur_file;		/* from director.c */
 int yylex(void);
 
 size_t line;
+int chkflag = 0; /* flag for variable reference for CHECK*/
 
 static int input_delay;
 
@@ -264,9 +265,13 @@ call4		: CALL4 result result result result fn_name args eol {
  }
 		;
 
-check		: CHECK var returns eol {
+check		: CHECK var checkval eol {
 	ct_data_t retvar;
 	var_t *vptr;
+
+	/* This is basically unsatisfiable, bcoz assign_rets 
+	 * creates the variable.
+	 */
 	if (command.returns[0].data_index == -1)
 		err(1, "Undefined variable in check statement, line %zu"
 		    " of file %s", line, cur_file);
@@ -431,6 +436,10 @@ var		: VARNAME {
 reference	: VARIABLE {
 	assign_rets(data_ref, $1);
  }
+
+ checkval		: returns
+		| VARIABLE { chkflag = 1; assign_rets(data_ref, $1); chkflag = 0;}
+		;
 
 fn_name		: VARNAME {
 	if (command.function != NULL)
@@ -872,6 +881,11 @@ assign_rets(data_enum_t ret_type, void *ret)
 		} else if (ret_type == data_ref) {
 			if ((cur.data_index = find_var_index(ret)) < 0)
 				err(1, "Undefined variable reference");
+			if(chkflag){
+				cur.data_type = vars[cur.data_index].type;
+				cur.data_value = vars[cur.data_index].value;
+				cur.data_len = vars[cur.data_index].len;
+			}
 		}
 	} else {
 		cur.data_index = find_var_index(ret);
@@ -1383,7 +1397,6 @@ validate(int i, void *data)
 
 		response = byte_response->data_value;
 	}
-
 	switch (command.returns[i].data_type) {
 	case data_err:
 		validate_type(data_err, byte_response, 0);

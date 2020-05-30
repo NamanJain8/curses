@@ -57,7 +57,7 @@ cmd_addbytes(int nargs, char **args)
 
 	if (sscanf(args[1], "%d", &count) == 0) {
 		report_count(1);
-	report_error("BAD ARGUMENT");
+		report_error("BAD ARGUMENT");
 		return;
 	}
 
