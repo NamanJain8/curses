@@ -1,0 +1,8 @@
+include start
+cchar CHAR 0x000 [0x3401, 0x300]
+call OK add_wch $CHAR
+call OK refresh
+call OK move 0 0
+call2 OK $CHAR in_wch
+call2 OK NCHAR in_wch
+check NCHAR $CHAR

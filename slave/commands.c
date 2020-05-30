@@ -227,6 +227,30 @@ report_nstr(chtype *string)
 }
 
 /*
+ * Report a cchar back to the director via the command pipe.
+ */
+void
+report_cchar(cchar_t c)
+{
+	int len, type;
+
+	len = sizeof(cchar_t);
+
+	type = data_cchar;
+	if (write(slvpipe[WRITE_PIPE], &type, sizeof(int)) < 0)
+		err(1, "%s: command pipe write for status type failed",
+		    __func__);
+
+	if (write(slvpipe[WRITE_PIPE], &len, sizeof(int)) < 0)
+		err(1, "%s: command pipe write for status length failed",
+		    __func__);
+
+	if (write(slvpipe[WRITE_PIPE], &c, len) < 0)
+		err(1, "%s: command pipe write of status data failed",
+		    __func__);
+}
+
+/*
  * Check the number of args we received are what we expect.  Return an
  * error if they do not match.
  */

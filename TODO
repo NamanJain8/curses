@@ -1,0 +1,2 @@
+1. Fix the attributes check for wide characters. (validate_cchar)
+

@@ -43,6 +43,7 @@ void report_int(int);
 void report_byte(chtype);
 void report_return(int);
 void report_nstr(chtype *);
+void report_cchar(cchar_t);
 void report_status(const char *);
 void report_ptr(void *);
 int  check_arg_count(int, int);

@@ -130,6 +130,7 @@ static void	validate(int, void *);
 static void	validate_return(const char *, const char *, int);
 static void	validate_variable(int, data_enum_t, const void *, int, int);
 static void	validate_byte(ct_data_t *, ct_data_t *, int);
+static void validate_cchar(cchar_t *, cchar_t *, int);
 static void	write_cmd_pipe(char *);
 static void	write_cmd_pipe_args(data_enum_t, void *);
 static void	read_cmd_pipe(ct_data_t *);
@@ -1273,8 +1274,15 @@ do_function_call(size_t nresults)
 		} else {
 			vars[command.returns[i].data_index].len =
 				response[i].data_len;
-			vars[command.returns[i].data_index].value =
-				response[i].data_value;
+
+			if(command.returns[i].data_type == data_cchar) {
+				vars[command.returns[i].data_index].cchar =
+					*((cchar_t *)response[i].data_value);
+			} else {
+				vars[command.returns[i].data_index].value =
+					response[i].data_value;
+			}
+
 			vars[command.returns[i].data_index].type =
 				response[i].data_type;
 		}
@@ -1455,7 +1463,7 @@ validate_reference(int i, void *data)
 		fprintf(stderr,
 		    "%s: return type of %s, value %s \n", __func__,
 		    enum_names[varp->type],
-		    (const char *)varp->value);
+		    (varp->type != data_cchar) ? (const char *)varp->value : "-");
 	}
 
 	switch (varp->type) {
@@ -1466,6 +1474,10 @@ validate_reference(int i, void *data)
 
 	case data_byte:
 		validate_byte(varp->value, byte_response, 0);
+		break;
+
+	case data_cchar:
+		validate_cchar(&(varp->cchar), (cchar_t *) response, 0);
 		break;
 
 	default:
@@ -1567,6 +1579,77 @@ validate_byte(ct_data_t *expected, ct_data_t *value, int check)
 		    (check == 0)? "matching" : "not matching", line, cur_file);
 	if (verbose) {
 		fprintf(stderr, "Validated expected %s byte stream "
+		    "at line %zu of file %s\n",
+		    (check == 0)? "matching" : "not matching",
+		    line, cur_file);
+	}
+}
+
+/*
+ * Validate the return cchar against the expected cchar, throw an error
+ * if they don't match expectations.
+ */
+static void
+validate_cchar(cchar_t *expected, cchar_t *value, int check)
+{
+	unsigned j;
+
+	/*
+	 * No chance of a match if elements count differ...
+	 */
+	if ((expected->elements != value->elements)){
+		if(check == 0)
+			errx(1, "cchar validation failed, elements count mismatch, expected %d,"
+			"received %d", expected->elements, value->elements);
+		else {
+			if(verbose)
+				fprintf(stderr, "Validated expected %s cchar"
+					"at line %zu of file %s\n", "not matching",
+					line, cur_file);
+			return;
+		}
+	}
+
+	/*
+	 * No chance of a match if attributes differ...
+	 */
+	/*
+	if ((expected->attributes != value->attributes)){
+		if(check == 0)
+			errx(1, "cchar validation failed,attributes mismatch, expected %d,"
+			"received %d", expected->attributes, value->attributes);
+		else {
+			if(verbose)
+				fprintf(stderr, "Validated expected %s cchar"
+					"at line %zu of file %s\n", "not matching",
+					line, cur_file);
+			return;
+		}
+	}
+	*/
+
+	/*
+	 * If check is 0 then we want to throw an error IFF the vals
+	 * do not match, if check is 1 then throw an error if the vals
+	 * streams match.
+	 */
+	for(j = 0; j < expected->elements; j++) {
+		if(expected->vals[j] != value->vals[j]) {
+			if(check == 0)
+				errx(1, "cchar validation failed, vals mismatch, expected %d,"
+				"received %d", expected->vals[j], value->vals[j]);
+			else {
+				if(verbose)
+					fprintf(stderr, "Validated expected %s cchar"
+						"at line %zu of file %s\n", "not matching",
+						line, cur_file);
+				return;
+			}
+		}
+	}
+
+	if (verbose) {
+		fprintf(stderr, "Validated expected %s cchar "
 		    "at line %zu of file %s\n",
 		    (check == 0)? "matching" : "not matching",
 		    line, cur_file);

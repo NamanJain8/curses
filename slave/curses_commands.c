@@ -6870,11 +6870,13 @@ cmd_wget_wstr(int nargs, char **args)
 void
 cmd_in_wch(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	cchar_t wcval;
+	if (check_arg_count(nargs, 0) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	report_count(2);
+	report_return(in_wch(&wcval));
+	report_cchar(wcval);
 }
 
 
