@@ -7,6 +7,6 @@ call okvar move 2 5
 check okvar OK
 call2 Y1 X1 getyx STDSCR
 call2 Y2 X2 getyx STDSCR
-check STR1 $STR2
-check Y1 $Y2
-check X1 $X2
+check STR1 STR2
+check Y1 Y2
+check X1 X2

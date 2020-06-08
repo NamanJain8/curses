@@ -61,7 +61,6 @@ extern char *cur_file;		/* from director.c */
 int yylex(void);
 
 size_t line;
-int chkflag = 0; /* flag for variable reference for CHECK*/
 
 static int input_delay;
 
@@ -131,6 +130,7 @@ static void	validate_return(const char *, const char *, int);
 static void	validate_variable(int, data_enum_t, const void *, int, int);
 static void	validate_byte(ct_data_t *, ct_data_t *, int);
 static void validate_cchar(cchar_t *, cchar_t *, int);
+static void validate_wchar(wchar_t *, wchar_t *, int);
 static void	write_cmd_pipe(char *);
 static void	write_cmd_pipe_args(data_enum_t, void *);
 static void	read_cmd_pipe(ct_data_t *);
@@ -266,14 +266,14 @@ call4		: CALL4 result result result result fn_name args eol {
  }
 		;
 
-check		: CHECK var checkval eol {
+check		: CHECK var returns eol {
 	ct_data_t retvar;
 	var_t *vptr;
 
-	/* This is basically unsatisfiable, bcoz assign_rets 
-	 * creates the variable.
-	 */
 	if (command.returns[0].data_index == -1)
+		/* This code is unreachable, assign_rets() assigns
+		 * the variable var if not defined.
+		 */
 		err(1, "Undefined variable in check statement, line %zu"
 		    " of file %s", line, cur_file);
 
@@ -284,13 +284,10 @@ check		: CHECK var checkval eol {
 	}
 
 	/*
-	 * Check if both have same data types, else they will have
-	 * data_string type
+	 * Check if var and return have same data types
 	 */
 	if (((command.returns[1].data_type == data_byte) &&
-	     (vars[command.returns[0].data_index].type != data_byte)) ||
-	   ((command.returns[1].data_type == data_cchar) &&
-	     (vars[command.returns[0].data_index].type != data_cchar)))
+-            (vars[command.returns[0].data_index].type != data_byte)))
 		err(1, "Var type %s (%d) does not match return type %s (%d)",
 		    enum_names[
 		    vars[command.returns[0].data_index].type],
@@ -336,9 +333,77 @@ check		: CHECK var checkval eol {
 		validate_byte(&retvar, &command.returns[1], 0);
 		break;
 
+	default:
+		err(1, "Malformed check statement at line %zu "
+		    "of file %s", line, cur_file);
+		break;
+	}
+
+	init_parse_variables(0);
+ }
+		| CHECK var var eol {
+
+	ct_data_t expval;
+
+	var_t *vptr1 = &vars[command.returns[0].data_index];
+	var_t *vptr2 = &vars[command.returns[1].data_index];
+
+	if (verbose) {
+		fprintf(stderr, "Checking contents of variable %s(%s) against %s(%s)\n",
+		    vptr1->name, enum_names[vptr1->type], vptr2->name, enum_names[vptr2->type]);
+	}
+
+	/*
+	 * Check if both have same data types, else they will have
+	 * data_string type
+	 */
+	if ( vptr1->type != vptr2->type )
+		err(1, "Var type %s (%d) does not match return type %s (%d)",
+		    enum_names[vptr1->type], vptr1->type,
+		    enum_names[vptr2->type], vptr2->type );
+
+	switch (vptr2->type) {
+	case data_err:
+	case data_ok:
+		validate_type(vptr1->type, &command.returns[1], 0);
+		break;
+
+	case data_null:
+		validate_variable(0, data_string, "NULL",
+				  command.returns[0].data_index, 0);
+		break;
+
+	case data_nonnull:
+		validate_variable(0, data_string, "NULL",
+				  command.returns[0].data_index, 1);
+		break;
+
+	case data_string:
+	case data_number:
+		if (verbose) {
+			fprintf(stderr, " %s == returned %s\n",
+			    (const char *)vptr2->value,
+			    (const char *)vptr1->value);
+		}
+		validate_variable(0, data_string,
+			vptr2->value,
+		    command.returns[0].data_index, 0);
+		break;
+
+	case data_byte:
+		expval.data_len = vptr1->len;
+		expval.data_type = vptr1->type;
+		expval.data_value = vptr1->value;
+
+		validate_byte(&expval, &command.returns[1], 0);
+		break;
+
 	case data_cchar:
-		validate_cchar(&vars[command.returns[0].data_index].cchar,
-			command.returns[1].data_value, 0);
+		validate_cchar(&(vptr1->cchar), &(vptr2->cchar), 0);
+		break;
+	
+	case data_wchar:
+		validate_wchar((wchar_t *) vptr1->value, (wchar_t *) vptr2->value, 0);
 		break;
 
 	default:
@@ -348,7 +413,7 @@ check		: CHECK var checkval eol {
 	}
 
 	init_parse_variables(0);
- }
+}
 		;
 
 delay		: DELAY numeric eol {
@@ -443,10 +508,6 @@ var		: VARNAME {
 reference	: VARIABLE {
 	assign_rets(data_ref, $1);
  }
-
- checkval		: returns
-		| VARIABLE { chkflag = 1; assign_rets(data_ref, $1); chkflag = 0;}
-		;
 
 fn_name		: VARNAME {
 	if (command.function != NULL)
@@ -745,7 +806,7 @@ set_cchar(char *name, void *attributes)
 	vars[i].type = data_cchar;
 	vars[i].cchar.attributes = attribs;
 	vars[i].cchar.elements = nvals;
-	for (j = 0; j < nvals; j++) 
+	for (j = 0; j < nvals; j++)
 		vars[i].cchar.vals[j] = vals[j];
 
 	nvals = 0;
@@ -768,14 +829,14 @@ set_wchar(char *name)
 		i = assign_var(name);
 
 	vars[i].type = data_wchar;
-	vars[i].len = nvals * sizeof(wchar_t);
+	vars[i].len = (nvals+1) * sizeof(wchar_t);
 	vars[i].value = malloc(vars[i].len);
 	if (vars[i].value == NULL)
 		err(1, "Could not malloc memory to assign wchar string");
 	wcval = vars[i].value;
 	for(j = 0; j < nvals; j++)
 		wcval[j] = vals[j];
-
+	wcval[nvals] = L'\0';
 	nvals = 0;
 	vals = NULL;
 
@@ -888,14 +949,6 @@ assign_rets(data_enum_t ret_type, void *ret)
 		} else if (ret_type == data_ref) {
 			if ((cur.data_index = find_var_index(ret)) < 0)
 				err(1, "Undefined variable reference");
-			if(chkflag){
-				cur.data_type = vars[cur.data_index].type;
-				if(cur.data_type == data_cchar)
-					cur.data_value = &vars[cur.data_index].cchar;
-				else
-					cur.data_value = vars[cur.data_index].value;
-				cur.data_len = vars[cur.data_index].len;
-			}
 		}
 	} else {
 		cur.data_index = find_var_index(ret);
@@ -1472,7 +1525,8 @@ validate_reference(int i, void *data)
 		fprintf(stderr,
 		    "%s: return type of %s, value %s \n", __func__,
 		    enum_names[varp->type],
-		    (varp->type != data_cchar) ? (const char *)varp->value : "-");
+		    (varp->type != data_cchar && varp->type != data_wchar) 
+			? (const char *)varp->value : "-");
 	}
 
 	switch (varp->type) {
@@ -1487,6 +1541,10 @@ validate_reference(int i, void *data)
 
 	case data_cchar:
 		validate_cchar(&(varp->cchar), (cchar_t *) response, 0);
+		break;
+
+	case data_wchar:
+		validate_wchar((wchar_t *) varp->value, (wchar_t *) response, 0);
 		break;
 
 	default:
@@ -1666,6 +1724,71 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 }
 
 /*
+ * Validate the return wchar string against the expected wchar, throw an
+ * error if they don't match expectations.
+ */
+static void
+validate_wchar(wchar_t *expected, wchar_t *value, int check)
+{
+	unsigned j;
+
+	unsigned len1 = 0;
+	unsigned len2 = 0;
+	wchar_t *p;
+
+	p = expected;
+	while(*p++ != L'\0')
+		len1++;
+
+	p = value;
+	while(*p++ != L'\0')
+		len2++;
+
+	/*
+	 * No chance of a match if length differ...
+	 */
+	if (len1 != len2){
+		if(check == 0)
+			errx(1, "wchar string validation failed, length mismatch, expected %d,"
+			"received %d", len1, len2);
+		else {
+			if(verbose)
+				fprintf(stderr, "Validated expected %s wchar"
+					"at line %zu of file %s\n", "not matching",
+					line, cur_file);
+			return;
+		}
+	}
+
+	/*
+	 * If check is 0 then we want to throw an error IFF the vals
+	 * do not match, if check is 1 then throw an error if the vals
+	 * streams match.
+	 */
+	for(j = 0; j < len1; j++) {
+		if(expected[j] != value[j]) {
+			if(check == 0)
+				errx(1, "wchar validation failed at index %d, expected %d,"
+				"received %d", j, expected[j], value[j]);
+			else {
+				if(verbose)
+					fprintf(stderr, "Validated expected %s wchar"
+						"at line %zu of file %s\n", "not matching",
+						line, cur_file);
+				return;
+			}
+		}
+	}
+
+	if (verbose) {
+		fprintf(stderr, "Validated expected %s wchar "
+		    "at line %zu of file %s\n",
+		    (check == 0)? "matching" : "not matching",
+		    line, cur_file);
+	}
+}
+
+/*
  * Validate the variable at i against the expected value, throw an
  * error if they don't match, if check is non-zero then the match is
  * negated.
@@ -1778,7 +1901,7 @@ write_cmd_pipe_args(data_enum_t type, void *data)
 			cmd = (void *) &var_data->cchar;
 			len = sizeof(cchar_t);
 			break;
-		
+
 		case data_wchar:
 			send_type = data_wchar;
 			break;

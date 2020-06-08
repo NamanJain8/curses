@@ -251,6 +251,38 @@ report_cchar(cchar_t c)
 }
 
 /*
+ * Report a wchar back to the director via the command pipe.
+ */
+void
+report_wstr(wchar_t *wstr)
+{
+	int len, type;
+	wchar_t *p;
+
+	len = 0;
+	p = wstr;
+
+	while (*p++ != L'\0')
+		len++;
+
+	len++; /* add in the termination chtype */
+	len *= sizeof(wchar_t);
+
+	type = data_wchar;
+	if (write(slvpipe[WRITE_PIPE], &type, sizeof(int)) < 0)
+		err(1, "%s: command pipe write for status type failed",
+		    __func__);
+
+	if (write(slvpipe[WRITE_PIPE], &len, sizeof(int)) < 0)
+		err(1, "%s: command pipe write for status length failed",
+		    __func__);
+
+	if (write(slvpipe[WRITE_PIPE], wstr, len) < 0)
+		err(1, "%s: command pipe write of status data failed",
+		    __func__);
+}
+
+/*
  * Check the number of args we received are what we expect.  Return an
  * error if they do not match.
  */
