@@ -251,6 +251,20 @@ report_cchar(cchar_t c)
 }
 
 /*
+ * Report a string of chtype back to the director via the command pipe.
+ */
+void
+report_wchar(wchar_t ch)
+{
+	wchar_t wstr[2];
+
+	wstr[0] = ch;
+	wstr[1] = L'\0';
+	report_wstr(wstr);
+}
+
+
+/*
  * Report a wchar back to the director via the command pipe.
  */
 void

@@ -1680,11 +1680,12 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	/*
 	 * No chance of a match if attributes differ...
 	 */
-	/*
-	if ((expected->attributes != value->attributes)){
+
+	if ((expected->attributes & WA_ATTRIBUTES) !=
+			(value->attributes & WA_ATTRIBUTES )){
 		if(check == 0)
 			errx(1, "cchar validation failed,attributes mismatch, expected %d,"
-			"received %d", expected->attributes, value->attributes);
+			"received %d", expected->attributes | WA_ATTRIBUTES, value->attributes | WA_ATTRIBUTES);
 		else {
 			if(verbose)
 				fprintf(stderr, "Validated expected %s cchar"
@@ -1693,7 +1694,6 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 			return;
 		}
 	}
-	*/
 
 	/*
 	 * If check is 0 then we want to throw an error IFF the vals

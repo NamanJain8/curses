@@ -1,7 +1,7 @@
 include start
 wchar CHAR [0x41, 0x42, 0x3401]
-call OK addwstr $CHAR
+call OK mvaddwstr 2 0 $CHAR
 call OK refresh
-call2 0 4 getyx STDSCR
-call OK move 0 0
+call2 2 4 getyx STDSCR
+call OK move 2 0
 call2 3 $CHAR innwstr 4

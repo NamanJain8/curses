@@ -90,7 +90,7 @@ cmd_addchnstr(int nargs, char **args)
 
 	if (sscanf(args[1], "%d", &count) == 0) {
 		report_count(1);
-	report_error("BAD ARGUMENT");
+		report_error("BAD ARGUMENT");
 		return;
 	}
 
@@ -6781,88 +6781,216 @@ cmd_wget_wch(int nargs, char **args)
 void
 cmd_getn_wstr(int nargs, char **args)
 {
+	wchar_t wstr[256];
+	int n;
+
 	if (check_arg_count(nargs, 1) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%d", &n) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_return(getn_wstr(wstr, n));
+	report_wstr(wstr);
 }
 
 
 void
 cmd_get_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	wchar_t wstr[256];
+
+	if (check_arg_count(nargs, 0) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	report_count(2);
+	report_return(get_wstr(wstr));
+	report_wstr(wstr);
 }
-
 
 void
 cmd_mvgetn_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	wchar_t wstr[256];
+	int y, x, n;
+
+	if (check_arg_count(nargs, 3) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
-}
+	if (sscanf(args[0], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
 
+	if (sscanf(args[1], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[2], "%d", &n) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_return(mvgetn_wstr(y, x, wstr, n));
+	report_wstr(wstr);
+}
 
 void
 cmd_mvget_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	wchar_t wstr[256];
+	int y, x;
+
+	if (check_arg_count(nargs, 2) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_return(mvget_wstr(y, x, wstr));
+	report_wstr(wstr);
 }
 
 
 void
 cmd_mvwgetn_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	WINDOW *win;
+	wchar_t wstr[256];
+	int y, x, n;
+
+	if (check_arg_count(nargs, 4) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[2], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[3], "%d", &n) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_int(mvwgetn_wstr(win, y, x, wstr, n));
+	report_wstr(wstr);
 }
 
 
 void
 cmd_mvwget_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	WINDOW *win;
+	wchar_t wstr[256];
+	int y, x;
+
+	if (check_arg_count(nargs, 3) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &y) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[2], "%d", &x) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_int(mvwget_wstr(win, y, x, wstr));
+	report_wstr(wstr);
 }
 
 
 void
 cmd_wgetn_wstr(int nargs, char **args)
 {
-	if (check_arg_count(nargs, 1) == 1)
+	WINDOW *win;
+	wchar_t wstr[256];
+	int n;
+
+	if (check_arg_count(nargs, 2) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	if (sscanf(args[1], "%d", &n) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_int(wgetn_wstr(win, wstr, n));
+	report_wstr(wstr);
 }
 
 
 void
 cmd_wget_wstr(int nargs, char **args)
 {
+	WINDOW *win;
+	wchar_t wstr[256];
+
 	if (check_arg_count(nargs, 1) == 1)
 		return;
 
-	report_count(1);
-	report_error("UNSUPPORTED");
+	if (sscanf(args[0], "%p", &win) == 0) {
+		report_count(1);
+		report_error("BAD ARGUMENT");
+		return;
+	}
+
+	report_count(2);
+	report_int(wget_wstr(win, wstr));
+	report_wstr(wstr);
 }
 
 
@@ -7309,7 +7437,7 @@ cmd_erasewchar(int nargs, char **args)
 	/* XXX - call2 */
 	report_count(2);
 	report_return(erasewchar(&ch));
-	report_int(ch);
+	report_wchar(ch);
 }
 
 
@@ -7323,8 +7451,8 @@ cmd_killwchar(int nargs, char **args)
 
 	/* XXX - call2 */
 	report_count(2);
-	report_return(erasewchar(&ch));
-	report_int(ch);
+	report_return(killwchar(&ch));
+	report_wchar(ch);
 }
 
 

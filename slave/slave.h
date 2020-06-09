@@ -44,6 +44,7 @@ void report_byte(chtype);
 void report_return(int);
 void report_nstr(chtype *);
 void report_cchar(cchar_t);
+void report_wchar(wchar_t);
 void report_wstr(wchar_t *);
 void report_status(const char *);
 void report_ptr(void *);
