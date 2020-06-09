@@ -41,6 +41,11 @@ struct command_def {
  * prototypes for test commands
  */
 void cmd_DRAIN(int, char **); /* not a curses function */
+void set_int(int *, char *);
+void set_uint(unsigned int *, char *);
+void set_short(short *, char *);
+void set_win(WINDOW **, char *);
+void set_scrn(SCREEN **, char *);
 
 void cmd_addbytes(int, char **);
 void cmd_addch(int, char **);
