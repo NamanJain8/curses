@@ -56,11 +56,11 @@ do
 	v)
 	    ARGS="-v ${ARGS}"
 	    ;;
-	
+
 	g)
 	    ARGS="-g ${ARGS}"
 		;;
-	
+
 	\?)
 	    usage
 	    exit 1

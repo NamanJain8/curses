@@ -1,23 +1,23 @@
-utf=`locale -a | grep -i en_US.UTF-8`
-
-w_run(){
-	if [ -z "${utf}" ]; then
-		atf_fail "locale not available"
-	else
-		export LC_ALL=$utf
-		r_run $@
-	fi
-}
-
 h_run(){
-	export LC_ALL=C
-	r_run $@ 
+	file=$1
+	if [ -z "$2" ]; then
+		export LC_ALL=C
+		r_run $file
+	else
+		locale=`locale -a | grep -i $2`
+		if [ -z "${locale}" ]; then
+			atf_fail "locale not available"
+		else
+			export LC_ALL=$locale
+			shift [2]
+			r_run $file @2
+		fi
+	fi
 }
 
 r_run()
 {
 	file="$(atf_get_srcdir)/tests/${1}"
-
 	export COLUMNS=80
 	export LINES=24
 	$(atf_get_srcdir)/director/director $2 \
