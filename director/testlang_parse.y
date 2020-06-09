@@ -277,6 +277,16 @@ check		: CHECK var returns eol {
 		err(1, "Undefined variable in check statement, line %zu"
 		    " of file %s", line, cur_file);
 
+	if(command.returns[1].data_type == data_var){
+		vptr = &vars[command.returns[1].data_index];
+		command.returns[1].data_type = vptr->type;
+		command.returns[1].data_len = vptr->len;
+		if(vptr->type != data_cchar)
+			command.returns[1].data_value = vptr->value;
+		else
+			command.returns[1].data_value = &vptr->cchar;
+	}
+
 	if (verbose) {
 		fprintf(stderr, "Checking contents of variable %s for %s\n",
 		    vars[command.returns[0].data_index].name,
@@ -333,6 +343,17 @@ check		: CHECK var returns eol {
 		validate_byte(&retvar, &command.returns[1], 0);
 		break;
 
+	case data_cchar:
+		fprintf(stderr, "%d\n", ((cchar_t *) command.returns[1].data_value)->elements);
+		validate_cchar(&vars[command.returns[0].data_index].cchar,
+			(cchar_t *) command.returns[1].data_value, 0);
+		break;
+
+	case data_wchar:
+		validate_wchar((wchar_t *) vars[command.returns[0].data_index].value,
+			(wchar_t *) command.returns[1].data_value, 0);
+		break;
+
 	default:
 		err(1, "Malformed check statement at line %zu "
 		    "of file %s", line, cur_file);
@@ -341,80 +362,6 @@ check		: CHECK var returns eol {
 
 	init_parse_variables(0);
  }
-		| CHECK var var eol {
-
-	ct_data_t expval;
-
-	var_t *vptr1 = &vars[command.returns[0].data_index];
-	var_t *vptr2 = &vars[command.returns[1].data_index];
-
-	if (verbose) {
-		fprintf(stderr, "Checking contents of variable %s(%s) against %s(%s)\n",
-		    vptr1->name, enum_names[vptr1->type], vptr2->name, enum_names[vptr2->type]);
-	}
-
-	/*
-	 * Check if both have same data types, else they will have
-	 * data_string type
-	 */
-	if ( vptr1->type != vptr2->type )
-		err(1, "Var type %s (%d) does not match return type %s (%d)",
-		    enum_names[vptr1->type], vptr1->type,
-		    enum_names[vptr2->type], vptr2->type );
-
-	switch (vptr2->type) {
-	case data_err:
-	case data_ok:
-		validate_type(vptr1->type, &command.returns[1], 0);
-		break;
-
-	case data_null:
-		validate_variable(0, data_string, "NULL",
-				  command.returns[0].data_index, 0);
-		break;
-
-	case data_nonnull:
-		validate_variable(0, data_string, "NULL",
-				  command.returns[0].data_index, 1);
-		break;
-
-	case data_string:
-	case data_number:
-		if (verbose) {
-			fprintf(stderr, " %s == returned %s\n",
-			    (const char *)vptr2->value,
-			    (const char *)vptr1->value);
-		}
-		validate_variable(0, data_string,
-			vptr2->value,
-		    command.returns[0].data_index, 0);
-		break;
-
-	case data_byte:
-		expval.data_len = vptr1->len;
-		expval.data_type = vptr1->type;
-		expval.data_value = vptr1->value;
-
-		validate_byte(&expval, &command.returns[1], 0);
-		break;
-
-	case data_cchar:
-		validate_cchar(&(vptr1->cchar), &(vptr2->cchar), 0);
-		break;
-	
-	case data_wchar:
-		validate_wchar((wchar_t *) vptr1->value, (wchar_t *) vptr2->value, 0);
-		break;
-
-	default:
-		err(1, "Malformed check statement at line %zu "
-		    "of file %s", line, cur_file);
-		break;
-	}
-
-	init_parse_variables(0);
-}
-		;
 
 delay		: DELAY numeric eol {
 	/* set the inter-character delay */
@@ -486,7 +433,6 @@ comparend	: COMPAREND PATH eol
 
 
 result		: returns
-		| var
 		| reference
 		;
 
@@ -498,6 +444,7 @@ returns		: numeric { assign_rets(data_number, $1); }
 		| OK_RET { assign_rets(data_ok, NULL); }
 		| NULL_RET { assign_rets(data_null, NULL); }
 		| NON_NULL { assign_rets(data_nonnull, NULL); }
+		| var
 		;
 
 var		: VARNAME {
@@ -1337,10 +1284,10 @@ do_function_call(size_t nresults)
 			vars[command.returns[i].data_index].len =
 				response[i].data_len;
 
-			if(command.returns[i].data_type == data_cchar) {
+			if(response[i].data_type == data_cchar) {
 				vars[command.returns[i].data_index].cchar =
 					*((cchar_t *)response[i].data_value);
-			} else {
+		} else {
 				vars[command.returns[i].data_index].value =
 					response[i].data_value;
 			}
