@@ -390,7 +390,7 @@ include		BEGIN(incl);
 			if ((yylval.retval = malloc(sizeof(ct_data_t))) == NULL)
 				err(1, "Cannot allocate return struct");
 			p = yytext;
-			p++; /* skip the leading ' */
+			p++; /* skip the leading ` */
 			if ((str = dequote(p, &len)) == NULL)
 				err(1, "Cannot allocate string");
 			len--; /* trim trailing ` */

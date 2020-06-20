@@ -107,6 +107,8 @@ report_return(int status)
 		report_type(data_err);
 	else if (status == OK)
 		report_type(data_ok);
+	else if (status == KEY_CODE_YES)
+		report_int(status);
 	else
 		report_status("INVALID_RETURN");
 }

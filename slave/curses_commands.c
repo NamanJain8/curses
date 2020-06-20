@@ -4706,88 +4706,148 @@ cmd_mvwins_wch(int nargs, char **args)
 void
 cmd_ins_nwstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    wchar_t *wstr;
+    int n;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    wstr = (wchar_t *) args[0];
+    set_int(&n, args[1]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(ins_nwstr(wstr, n));
 }
 
 
 void
 cmd_ins_wstr(int nargs, char **args)
 {
+    wchar_t *wstr;
+
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    wstr = (wchar_t *) args[0];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(ins_wstr(wstr));
 }
 
 
 void
 cmd_mvins_nwstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    int y, x;
+    wchar_t *wstr;
+    int n;
+
+    if (check_arg_count(nargs, 4) == 1)
         return;
 
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+    wstr = (wchar_t *) args[2];
+    set_int(&n, args[3]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvins_nwstr(y, x, wstr, n));
 }
 
 
 void
 cmd_mvins_wstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    int y, x;
+    wchar_t *wstr;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+    wstr = (wchar_t *) args[2];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvins_wstr(y, x, wstr));
 }
 
 
 void
 cmd_mvwins_nwstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    int y, x;
+    wchar_t *wstr;
+    int n;
+
+    if (check_arg_count(nargs, 5) == 1)
         return;
 
+    wstr = (wchar_t *) args[0];
+    set_int(&y, args[1]);
+    set_int(&x, args[2]);
+    set_win(&win, args[3]);
+    set_int(&n, args[4]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvwins_nwstr(win, y, x, wstr, n));
 }
 
 
 void
 cmd_mvwins_wstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    int y, x;
+    wchar_t *wstr;
+
+    if (check_arg_count(nargs, 4) == 1)
         return;
 
+    set_win(&win, args[0]);
+    set_int(&y, args[1]);
+    set_int(&x, args[2]);
+    wstr = (wchar_t *) args[3];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvwins_wstr(win, y, x, wstr));
 }
 
 
 void
 cmd_wins_nwstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    wchar_t *wstr;
+    int n;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wstr = (wchar_t *) args[1];
+    set_int(&n, args[2]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(wins_nwstr(win, wstr, n));
 }
 
 
 void
 cmd_wins_wstr(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    wchar_t *wstr;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wstr = (wchar_t *) args[1];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(wins_wstr(win, wstr));
 }
 
 
@@ -4796,55 +4856,81 @@ cmd_wins_wstr(int nargs, char **args)
 void
 cmd_get_wch(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    wchar_t ch;
+    if (check_arg_count(nargs, 0) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    report_count(2);
+    report_return(get_wch(&ch));
+    report_wchar(ch);
 }
 
 
 void
 cmd_unget_wch(int nargs, char **args)
 {
+    wchar_t *wch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    wch = (wchar_t *) args[0];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(unget_wch(*wch));
 }
 
 
 void
 cmd_mvget_wch(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    wchar_t ch;
+    int y, x;
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+
+    report_count(2);
+    report_return(mvget_wch(y, x, &ch));
+    report_wchar(ch);
 }
 
 
 void
 cmd_mvwget_wch(int nargs, char **args)
 {
+    wchar_t ch;
+    WINDOW *win;
+    int y, x;
+
     if (check_arg_count(nargs, 1) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    set_win(&win, args[0]);
+    set_int(&y, args[1]);
+    set_int(&x, args[2]);
+
+    report_count(2);
+    report_return(mvwget_wch(win, y, x, &ch));
+    report_wchar(ch);
 }
 
 
 void
 cmd_wget_wch(int nargs, char **args)
 {
+    wchar_t ch;
+    WINDOW *win;
+
     if (check_arg_count(nargs, 1) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    set_win(&win, args[0]);
+
+    report_count(2);
+    report_return(wget_wch(win, &ch));
+    report_wchar(ch);
 }
 
 

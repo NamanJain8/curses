@@ -475,6 +475,10 @@ array		: numeric { $<vals>$ = add_to_vals(data_number, $1); };
 			{
 				$<vals>$ = add_to_vals(data_byte, (void *) $1);
 			}
+		| STRING
+			{
+				$<vals>$ = add_to_vals(data_string, (void *) $1);
+			}
 		| numeric MULTIPLIER numeric
 			{
 				unsigned long i;
