@@ -390,6 +390,7 @@ struct command_def commands[] = {
 	{"wbkgrnd", cmd_wbkgrnd},
 	{"wbkgrndset", cmd_wbkgrndset},
 	{"wgetbkgrnd", cmd_wgetbkgrnd},
+	{"immedok", cmd_immedok},
 };
 
 size_t ncmds = sizeof(commands) / sizeof(struct command_def);

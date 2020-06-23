@@ -421,7 +421,7 @@ void cmd_wbkgrnd(int, char **);
 void cmd_wbkgrndset(int, char **);
 void cmd_wgetbkgrnd(int, char **);
 
-
+void cmd_immedok(int, char **);
 
 
 #endif /* !_CURSES_COMMAND_H_ */

@@ -1054,6 +1054,7 @@ cmd_mvinsch(int nargs, char **args)
 void
 cmd_mvinstr(int nargs, char **args)
 {
+    char string[256];
     int y, x;
 
     if (check_arg_count(nargs, 3) == 1)
@@ -1061,8 +1062,10 @@ cmd_mvinstr(int nargs, char **args)
 
     set_int(&y, args[0]);
     set_int(&x, args[1]);
-    report_count(1);
-    report_return(mvinstr(y, x, args[2]));
+
+    report_count(2);
+    report_return(mvinstr(y, x, string));
+    report_status(string);
 }
 
 
@@ -4626,11 +4629,15 @@ cmd_waddwstr(int nargs, char **args)
 void
 cmd_echo_wchar(int nargs, char **args)
 {
+    cchar_t *ch;
+
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    ch = (cchar_t *) args[0];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(echo_wchar(ch));
 }
 
 
@@ -5364,22 +5371,46 @@ cmd_winwstr(int nargs, char **args)
 void
 cmd_setcchar(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t wcval;
+    wchar_t *wch;
+    attr_t attrs;
+    short color_pair;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    wch = (wchar_t *) args[0];
+    set_int(&attrs, args[1]);
+    set_short(&color_pair, args[2]);
+
+    report_count(2);
+    report_return(setcchar(&wcval, wch, attrs, color_pair, NULL));
+    report_cchar(wcval);
 }
 
 
 void
 cmd_getcchar(int nargs, char **args)
 {
+    cchar_t *wcval;
+    wchar_t wch[256];
+    attr_t attrs;
+    short color_pair;
+
+    /*
+     * XXX - not handling passing of wch as NULL
+     */
+
     if (check_arg_count(nargs, 1) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    wcval = (cchar_t *) args[0];
+
+    report_count(4);
+    report_return(getcchar(wcval, wch, &attrs, &color_pair, NULL));
+    report_wstr(wch);
+    report_int(attrs);
+    report_int(color_pair);
 }
 
 
@@ -5614,4 +5645,22 @@ cmd_wgetbkgrnd(int nargs, char **args)
 
     report_count(1);
     report_error("UNSUPPORTED");
+}
+
+
+void
+cmd_immedok(int nargs, char **args)
+{
+    WINDOW* win;
+    int bf;
+
+    if (check_arg_count(nargs, 2) == 1)
+        return;
+
+    set_win(&win, args[0]);
+    set_int(&bf, args[1]);
+
+    report_count(1);
+    immedok(win, bf);
+    report_return(OK);
 }

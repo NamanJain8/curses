@@ -1,0 +1,2 @@
+wchar echar 0x8
+call2 OK $echar erasewchar

@@ -2,19 +2,19 @@ include start
 # 0x3401 takes 2 columns
 # test multi-column 
 wchar WSTR [0x41, 0x42, 0x3401, 0x43, 0x44, 0x45]
-call OK addwstr $WSTR
+call OK addnwstr $WSTR 4
 call OK refresh
-call2 0 7 getyx STDSCR
-compare addwstr1.chk
+call2 0 5 getyx STDSCR
+compare addnwstr1.chk
 
 # test special character processing
-wchar CR "\r"
-call OK addwstr $CR
+wchar CR ["\r", "a", "\r", "b", "c"]
+call OK addnwstr $CR 4
 call OK refresh
 compare addwstr2.chk
 
 # test wrapping
 call OK move 2 77
-call OK addwstr $WSTR
+call OK addnwstr $WSTR -1
 call OK refresh
 compare addwstr3.chk
