@@ -5434,22 +5434,46 @@ cmd_key_name(int nargs, char **args)
 void
 cmd_border_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t *ls, *rs, *ts, *bs, *tl, *tr, *bl, *br;
+
+    if (check_arg_count(nargs, 8) == 1)
         return;
 
+    ls = (cchar_t *) args[0];
+    rs = (cchar_t *) args[1];
+    ts = (cchar_t *) args[2];
+    bs = (cchar_t *) args[3];
+    tl = (cchar_t *) args[4];
+    tr = (cchar_t *) args[5];
+    bl = (cchar_t *) args[6];
+    br = (cchar_t *) args[7];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(border_set(ls, rs, ts, bs, tl, tr, bl, br));
 }
 
 
 void
 cmd_wborder_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *ls, *rs, *ts, *bs, *tl, *tr, *bl, *br;
+
+    if (check_arg_count(nargs, 9) == 1)
         return;
 
+    set_win(&win, args[0]);
+    ls = (cchar_t *) args[0];
+    rs = (cchar_t *) args[1];
+    ts = (cchar_t *) args[2];
+    bs = (cchar_t *) args[3];
+    tl = (cchar_t *) args[4];
+    tr = (cchar_t *) args[5];
+    bl = (cchar_t *) args[6];
+    br = (cchar_t *) args[7];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(border_set(ls, rs, ts, bs, tl, tr, bl, br));
 }
 
 
@@ -5497,11 +5521,17 @@ cmd_killwchar(int nargs, char **args)
 void
 cmd_hline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t *wch;
+    int n;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    wch = (cchar_t *) args[0];
+    set_int(&n, args[1]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(hline_set(wch, n));
 }
 
 
