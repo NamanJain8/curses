@@ -423,5 +423,25 @@ void cmd_wgetbkgrnd(int, char **);
 
 void cmd_immedok(int, char **);
 
+void cmd_syncok(int, char **);
+void cmd_wcursyncup(int, char **);
+void cmd_wsyncup(int, char **);
+void cmd_wsyncdown(int, char **);
+
+void cmd_slk_attroff(int, char**);
+void cmd_slk_attr_off(int, char**);
+void cmd_slk_attron(int, char**);
+void cmd_slk_attr_on(int, char**);
+void cmd_slk_attrset(int, char**);
+void cmd_slk_attr_set(int, char**);
+void cmd_slk_clear(int, char**);
+void cmd_slk_color(int, char**);
+void cmd_slk_label(int, char**);
+void cmd_slk_noutrefresh(int, char**);
+void cmd_slk_refresh(int, char**);
+void cmd_slk_restore(int, char**);
+void cmd_slk_set(int, char**);
+void cmd_slk_touch(int, char**);
+void cmd_slk_wset(int, char**);
 
 #endif /* !_CURSES_COMMAND_H_ */

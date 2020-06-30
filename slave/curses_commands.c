@@ -1057,7 +1057,7 @@ cmd_mvinstr(int nargs, char **args)
     char string[256];
     int y, x;
 
-    if (check_arg_count(nargs, 3) == 1)
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
     set_int(&y, args[0]);
@@ -5693,4 +5693,270 @@ cmd_immedok(int nargs, char **args)
     report_count(1);
     immedok(win, bf);
     report_return(OK);
+}
+
+void
+cmd_syncok(int nargs, char **args)
+{
+    WINDOW* win;
+    int bf;
+
+    if (check_arg_count(nargs, 2) == 1)
+        return;
+
+    set_win(&win, args[0]);
+    set_int(&bf, args[1]);
+
+    report_count(1);
+    report_return(syncok(win, bf));
+}
+
+void
+cmd_wcursyncup(int nargs, char **args)
+{
+    WINDOW* win;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    report_count(1);
+    wcursyncup(win);
+    report_return(OK);
+}
+
+void
+cmd_wsyncup(int nargs, char **args)
+{
+    WINDOW* win;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    report_count(1);
+    wsyncup(win);
+    report_return(OK);
+}
+
+void
+cmd_wsyncdown(int nargs, char **args)
+{
+    WINDOW* win;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    report_count(1);
+    wsyncdown(win);
+    report_return(OK);
+}
+
+
+/* Soft label key routines */
+void
+cmd_slk_attroff(int nargs, char **args)
+{
+    chtype *ch;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    ch = (chtype *) args[0];
+
+    report_count(1);
+    report_return(slk_attroff(ch[0]));
+}
+
+void
+cmd_slk_attr_off(int nargs, char **args)
+{
+    attr_t attrs;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_int(&attrs, args[0]);
+
+    report_count(1);
+    report_return(slk_attr_off(attrs, NULL));
+}
+
+void
+cmd_slk_attron(int nargs, char **args)
+{
+    chtype *ch;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    ch = (chtype *) args[0];
+
+    report_count(1);
+    report_return(slk_attron(ch[0]));
+}
+
+void
+cmd_slk_attr_on(int nargs, char **args)
+{
+    chtype attrs;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_int(&attrs, args[0]);
+
+    report_count(1);
+    report_return(slk_attr_on(attrs, NULL));
+}
+
+void
+cmd_slk_attrset(int nargs, char **args)
+{
+    chtype *ch;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    ch = (chtype *) args[0];
+
+    report_count(1);
+    report_return(slk_attrset(ch[0]));
+}
+
+void
+cmd_slk_attr_set(int nargs, char **args)
+{
+    attr_t attrs;
+    short color_pair_number;
+
+    if (check_arg_count(nargs, 2) == 1)
+        return;
+
+    set_int(&attrs, args[0]);
+    set_short(&color_pair_number, args[1]);
+
+    report_count(1);
+    report_return(slk_attr_set(attrs, color_pair_number, NULL));
+}
+
+void
+cmd_slk_clear(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(1);
+    report_return(slk_clear());
+}
+
+void
+cmd_slk_color(int nargs, char **args)
+{
+    short color_pair_number;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_short(&color_pair_number, args[0]);
+
+    report_count(1);
+    report_return(slk_color(color_pair_number));
+}
+
+void
+cmd_slk_label(int nargs, char **args)
+{
+    char *label;
+    int labnum;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_int(&labnum, args[0]);
+
+    label = slk_label(labnum);
+    report_count(1);
+    if(label == NULL)
+        report_status("NULL");
+    else
+        report_status(label);
+}
+
+void
+cmd_slk_noutrefresh(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(1);
+    report_return(slk_noutrefresh());
+}
+
+void
+cmd_slk_refresh(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(1);
+    report_return(slk_refresh());
+}
+
+void
+cmd_slk_restore(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(1);
+    report_return(slk_restore());
+}
+
+void
+cmd_slk_set(int nargs, char **args)
+{
+    int labnum;
+    int justify;
+
+    if (check_arg_count(nargs, 3) == 1)
+        return;
+
+    set_int(&labnum, args[0]);
+    set_int(&justify, args[2]);
+
+    report_count(1);
+    report_return(slk_set(labnum, args[1], justify));
+}
+
+void
+cmd_slk_touch(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(1);
+    report_return(slk_touch());
+}
+
+void
+cmd_slk_wset(int nargs, char **args)
+{
+    int labnum;
+    wchar_t *label;
+    int justify;
+
+    if (check_arg_count(nargs, 3) == 1)
+        return;
+
+    set_int(&labnum, args[0]);
+    label = (wchar_t *) args[1];
+    set_int(&justify, args[2]);
+
+    report_count(1);
+    report_return(slk_wset(labnum, label, justify));
 }
