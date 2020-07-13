@@ -1,6 +1,7 @@
 
 # GSoC 2020 First Evaluation Report: Curses Library Automated Testing
 
+
 ## Introduction
 
 My GSoC project under NetBSD involves the development of test framework of curses library. Automated Test Framework (ATF) was introduced in 2007 but ATF cannot be used directly for curses testing for several reasons most important of them being curses has functions which do timed reads/writes which is hard to do with just piping characters to test applications. Also, stdin is not a tty device and behaves differently and may affect the results. A lot of work regarding this has been done and we have a separate test framework in place for testing curses.
@@ -49,3 +50,9 @@ Along with these, the test framework provides capability to `include` other test
 	-  [lib/55433](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55433) Bug in special character handling of ins_wstr() of libcurses
 	- [lib/55434](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55434) Bug in hline() in libcurses [fixed]
 	- [lib/55443](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55443) setcchar() incorrectly sets the number of elements in cchar [fixed]
+
+## Project Proposal and References:
+- Proposal: [github.com/NamanJain8/curses/tree/master/reports/proposal.pdf](github.com/NamanJain8/curses/tree/master/reports/proposal.pdf)
+- Project Repo: [github.com/NamanJain8/curses](github.com/NamanJain8/curses)
+- Test Language Details: [github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt](github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt)
+- Wonderful report by Brett Lymn: [github.com/NamanJain8/curses/tree/master/reports/curses-testframe.pdf](github.com/NamanJain8/curses/tree/master/reports/curses-testframe.pdf)
