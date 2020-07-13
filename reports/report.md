@@ -52,7 +52,7 @@ Along with these, the test framework provides capability to `include` other test
 	- [lib/55443](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55443) setcchar() incorrectly sets the number of elements in cchar [fixed]
 
 ## Project Proposal and References:
-- Proposal: [github.com/NamanJain8/curses/tree/master/reports/proposal.pdf](github.com/NamanJain8/curses/tree/master/reports/proposal.pdf)
-- Project Repo: [github.com/NamanJain8/curses](github.com/NamanJain8/curses)
-- Test Language Details: [github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt](github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt)
-- Wonderful report by Brett Lymn: [github.com/NamanJain8/curses/tree/master/reports/curses-testframe.pdf](github.com/NamanJain8/curses/tree/master/reports/curses-testframe.pdf)
+- Proposal: [https://github.com/NamanJain8/curses/blob/master/reports/proposal.pdf](https://github.com/NamanJain8/curses/blob/master/reports/proposal.pdf)
+- Project Repo: [https://github.com/NamanJain8/curses](https://github.com/NamanJain8/curses)
+- Test Language Details: [https://github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt](https://github.com/NetBSD/src/blob/trunk/tests/lib/libcurses/testframe.txt)
+- Wonderful report by Brett Lymn: [https://github.com/NamanJain8/curses/blob/master/reports/curses-testframe.pdf](https://github.com/NamanJain8/curses/blob/master/reports/curses-testframe.pdf)
