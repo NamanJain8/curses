@@ -1859,6 +1859,39 @@ cmd_getparyx(int nargs, char **args)
     report_int(x);
 }
 
+void
+cmd_getmaxyx(int nargs, char **args)
+{
+    WINDOW *win;
+    int y, x;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    getmaxyx(win, y, x);
+    report_count(2);
+    report_int(y);
+    report_int(x);
+}
+
+void
+cmd_getbegyx(int nargs, char **args)
+{
+    WINDOW *win;
+    int y, x;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    getbegyx(win, y, x);
+    report_count(2);
+    report_int(y);
+    report_int(x);
+}
 
 void
 cmd_gettmode(int nargs, char **args)
@@ -2735,17 +2768,17 @@ cmd_pair_content(int nargs, char **args)
 void
 cmd_pechochar(int nargs, char **args)
 {
-    int ch;
+    chtype *ch;
     WINDOW *pad;
 
     if (check_arg_count(nargs, 2) == 1)
         return;
 
     set_win(&pad, args[0]);
-    set_int(&ch, args[1]);
+    ch = (chtype *) args[1];
 
     report_count(1);
-    report_return(pechochar(pad, ch));
+    report_return(pechochar(pad, ch[0]));
 }
 
 
@@ -4655,11 +4688,17 @@ cmd_wecho_wchar(int nargs, char **args)
 void
 cmd_pecho_wchar(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *pad;
+    cchar_t *wch;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    set_win(&pad, args[0]);
+    wch = (cchar_t *) args[1];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(pecho_wchar(pad, wch));
 }
 
 
@@ -5463,28 +5502,35 @@ cmd_wborder_set(int nargs, char **args)
         return;
 
     set_win(&win, args[0]);
-    ls = (cchar_t *) args[0];
-    rs = (cchar_t *) args[1];
-    ts = (cchar_t *) args[2];
-    bs = (cchar_t *) args[3];
-    tl = (cchar_t *) args[4];
-    tr = (cchar_t *) args[5];
-    bl = (cchar_t *) args[6];
-    br = (cchar_t *) args[7];
+    ls = (cchar_t *) args[1];
+    rs = (cchar_t *) args[2];
+    ts = (cchar_t *) args[3];
+    bs = (cchar_t *) args[4];
+    tl = (cchar_t *) args[5];
+    tr = (cchar_t *) args[6];
+    bl = (cchar_t *) args[7];
+    br = (cchar_t *) args[8];
 
     report_count(1);
-    report_return(border_set(ls, rs, ts, bs, tl, tr, bl, br));
+    report_return(wborder_set(win, ls, rs, ts, bs, tl, tr, bl, br));
 }
 
 
 void
 cmd_box_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *verch, *horch;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
+    set_win(&win, args[0]);
+    verch = (cchar_t *) args[1];
+    horch = (cchar_t *) args[2];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(box_set(win, verch, horch));
 }
 
 
@@ -5538,77 +5584,131 @@ cmd_hline_set(int nargs, char **args)
 void
 cmd_mvhline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t *wch;
+    int y, x, n;
+    if (check_arg_count(nargs, 4) == 1)
         return;
 
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+    wch = (cchar_t *) args[2];
+    set_int(&n, args[3]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvhline_set(y, x, wch, n));
 }
 
 
 void
 cmd_mvvline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t *wch;
+    int y, x, n;
+    if (check_arg_count(nargs, 4) == 1)
         return;
 
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+    wch = (cchar_t *) args[2];
+    set_int(&n, args[3]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvvline_set(y, x, wch, n));
 }
 
 
 void
 cmd_mvwhline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+    int y, x, n;
+    if (check_arg_count(nargs, 5) == 1)
         return;
 
+    set_win(&win, args[0]);
+    set_int(&y, args[1]);
+    set_int(&x, args[2]);
+    wch = (cchar_t *) args[3];
+    set_int(&n, args[4]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvwhline_set(win, y, x, wch, n));
 }
 
 
 void
 cmd_mvwvline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+    int y, x, n;
+    if (check_arg_count(nargs, 5) == 1)
         return;
 
+    set_win(&win, args[0]);
+    set_int(&y, args[1]);
+    set_int(&x, args[2]);
+    wch = (cchar_t *) args[3];
+    set_int(&n, args[4]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(mvwvline_set(win, y, x, wch, n));
 }
 
 
 void
 cmd_vline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t *wch;
+    int n;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    wch = (cchar_t *) args[0];
+    set_int(&n, args[1]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(vline_set(wch, n));
 }
 
 
 void
 cmd_whline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+    int n;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wch = (cchar_t *) args[1];
+    set_int(&n, args[2]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(whline_set(win, wch, n));
 }
 
 
 void
 cmd_wvline_set(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+    int n;
+
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wch = (cchar_t *) args[1];
+    set_int(&n, args[2]);
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(wvline_set(win, wch, n));
 }
 
 

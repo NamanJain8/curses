@@ -161,6 +161,8 @@ void cmd_getmaxx(int, char **);
 void cmd_getpary(int, char **);
 void cmd_getparx(int, char **);
 void cmd_getparyx(int, char **);
+void cmd_getmaxyx(int, char **);
+void cmd_getbegyx(int, char **);
 void cmd_gettmode(int, char **);
 void cmd_getwin(int, char **);
 void cmd_halfdelay(int, char **);
