@@ -3589,7 +3589,7 @@ cmd_wcolor_set(int nargs, char **args)
     WINDOW *win;
     short pair;
 
-    if (check_arg_count(nargs, 2) == 1)
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
     set_win(&win, args[0]);
@@ -5415,7 +5415,7 @@ cmd_setcchar(int nargs, char **args)
     attr_t attrs;
     short color_pair;
 
-    if (check_arg_count(nargs, 3) == 1)
+    if (check_arg_count(nargs, 4) == 1)
         return;
 
     wch = (wchar_t *) args[0];
@@ -5440,7 +5440,7 @@ cmd_getcchar(int nargs, char **args)
      * XXX - not handling passing of wch as NULL
      */
 
-    if (check_arg_count(nargs, 1) == 1)
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
     wcval = (cchar_t *) args[0];
@@ -5715,66 +5715,93 @@ cmd_wvline_set(int nargs, char **args)
 void
 cmd_bkgrnd(int nargs, char **args)
 {
+    cchar_t *wch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    wch = (cchar_t *) args[0];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(bkgrnd(wch));
 }
 
 
 void
 cmd_bkgrndset(int nargs, char **args)
 {
+    cchar_t *wch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    wch = (cchar_t *) args[0];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    bkgrndset(wch);
+    report_return(OK);
 }
 
 
 void
 cmd_getbkgrnd(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    cchar_t wch;
+    if (check_arg_count(nargs, 0) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    report_count(2);
+    report_return(getbkgrnd(&wch));
+    report_cchar(wch);
 }
 
 
 void
 cmd_wbkgrnd(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wch = (cchar_t *) args[1];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(wbkgrnd(win, wch));
 }
 
 
 void
 cmd_wbkgrndset(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *wch;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    set_win(&win, args[0]);
+    wch = (cchar_t *) args[1];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    wbkgrndset(win, wch);
+    report_return(OK);
 }
 
 
 void
 cmd_wgetbkgrnd(int nargs, char **args)
 {
+    WINDOW *win;
+    cchar_t wch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
-    report_count(1);
-    report_error("UNSUPPORTED");
+    set_win(&win, args[0]);
+
+    report_count(2);
+    report_return(wgetbkgrnd(win, &wch));
+    report_cchar(wch);
 }
 
 
