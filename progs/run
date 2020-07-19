@@ -1,0 +1,2 @@
+#!/usr/pkg/bin/bash
+gcc -lcurses $1.c && ./a.out

@@ -1,0 +1,23 @@
+Trace mask: 0x00000080
+waddnwstr: string len=1
+wadd_wch: win(0x774281cc6180), x: 0, y: 0
+_cursesi_addwchar: add character (0,0) 0x3401
+_cursesi_addwchar: add spacing char 0x3401, attr 0xbfc0000
+_cursesi_addwchar: non-spacing list header: 0x0
+_cursesi_addwchar: add rest columns (1:1)
+_cursesi_addwchar: *x = 0, win->maxx = 118
+_cursesi_addwchar: 13313 : 0xbfc0000
+_cursesi_addwchar: *x = 2, *y = 0, win->maxx = 118
+waddnwstr: (3401,0,1) added
+wgetch: win(0x774281cc6180)
+wgetch: __echoit = 1, __rawmode = 0, __nl = 1, flags = 0x4000d, delay = -1
+wgetch got 'q'
+addch: 113 : 0x0 (adding char as wide char)
+wadd_wch: win(0x774281cc6180), x: 2, y: 0
+_cursesi_addwchar: add character (0,2) 0x71
+_cursesi_addwchar: add spacing char 0x71, attr 0x7fc0000
+_cursesi_addwchar: non-spacing list header: 0x0
+_cursesi_addwchar: add rest columns (3:2)
+_cursesi_addwchar: *x = 2, win->maxx = 118
+_cursesi_addwchar: 113 : 0x7fc0000
+_cursesi_addwchar: *x = 3, *y = 0, win->maxx = 118
