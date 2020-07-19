@@ -1,0 +1,11 @@
+include start
+call OK nonl
+input "abcd\015ef"
+call2 OK "abcd" getstr
+call OK refresh
+
+call OK move 10 0
+call OK nl
+input "abcd\015ef"
+call2 OK "efabcd" getstr
+call OK refresh

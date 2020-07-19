@@ -1,0 +1,4 @@
+include window
+call OK leaveok $win1 $TRUE
+call OK waddstr $win1 "abcd"
+call OK wrefresh $win1

@@ -1,0 +1,6 @@
+include start
+wchar WCH [0x3401, 0x300]
+call2 OK CHAR setcchar $WCH 0x100 0 NULL
+cchar EXP 0x100 [0x3401, 0x300]
+call OK add_wch $CHAR
+check EXP CHAR

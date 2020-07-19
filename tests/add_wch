@@ -48,10 +48,11 @@ call2 1 4 getyx STDSCR
 cchar BACK 0 0x8
 call OK add_wch $BACK
 call OK refresh
-#compare add_wch3.chk
+compare add_wch3.chk
 
 # we are now at middle of multi-col char
 # (unexpected output)
-# call OK add_wch $CHAR
-# call OK refresh
-# call2 1 4 getyx STDSCR
+# cursor should be at 5
+call OK add_wch $CHAR
+call OK refresh
+call2 1 5 getyx STDSCR

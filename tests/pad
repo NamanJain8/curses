@@ -26,3 +26,4 @@ call OK mvwprintw $sub 1 5 "%s" "4444444444"
 call OK mvwprintw $sub 1 6 "%s" "4444444444"
 call OK prefresh $pad 5 100 8 6 18 18
 compare pad3.chk
+call OK pechochar $sub `\001a`

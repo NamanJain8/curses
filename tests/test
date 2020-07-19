@@ -1,0 +1,8 @@
+include start
+cchar ch 0x100 "a"
+call OK bkgd `\001a`
+call OK addstr "abcd"
+call OK refresh
+call OK bkgd `\001a`
+call OK clear
+call OK refresh

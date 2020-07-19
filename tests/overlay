@@ -1,0 +1,21 @@
+include start
+
+include window_create
+call OK wbkgdset $win1 `\001x`
+call OK werase $win1 
+call OK mvwaddstr $win1 0 0 "AAAAAA"
+call OK mvwaddstr $win1 1 0 "BBBBBB"
+call OK mvwaddstr $win1 2 0 "CCCCCC"
+call OK mvwaddstr $win1 3 0 "DDDDDD"
+call OK mvwaddstr $win1 4 0 "EEEEEE"
+call OK mvwaddstr $win1 5 0 "FFF"
+call OK wrefresh $win1
+
+call win2 newwin 6 6 6 7
+call OK mvwaddstr $win2 0 0 "AAAAAA"
+call OK mvwaddstr $win2 1 0 "BBBBBB"
+call OK mvwaddstr $win2 2 0 "CCCCCC"
+call OK wrefresh $win2
+
+#call OK overlay $win1 $win2
+call OK wrefresh $win1

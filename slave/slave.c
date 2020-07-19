@@ -158,7 +158,7 @@ main(int argc, char *argv[])
 	WINDOW *mainscr;
 
 	if (argc != 5) {
-		fprintf(stderr, "Usage: %s <cmdin> <cmdout> <slvin> slvout>\n",
+		fprintf(stderr, "Usage: %s <cmdin> <cmdout> <slvin> <slvout>\n",
 			getprogname());
 		return 0;
 	}
@@ -167,6 +167,7 @@ main(int argc, char *argv[])
 	sscanf(argv[3], "%d", &slvpipe[0]);
 	sscanf(argv[4], "%d", &slvpipe[1]);
 
+	// slk_init(0);
 	mainscr = initscr();
 	if (mainscr == NULL)
 		err(1, "initscr failed");

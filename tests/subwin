@@ -1,0 +1,21 @@
+include window_hierarchy
+
+# this file tests subwindow properties
+
+call OK syncok $win3 $TRUE
+call OK mvwaddstr $win3 1 0 "aaa"
+# refresh on win4 does not update anything, refresh on win1/win2/win3 will add "aaa"
+call OK wrefresh $win4
+call OK wrefresh $win1
+compare subwin1.chk
+
+call OK syncok $win3 $FALSE
+call OK mvwaddstr $win3 1 0 "bbb"
+call OK wrefresh $win4
+call OK wrefresh $win1
+# wrefresh on win1 will untouch all of its predecessors
+# so need to touch win3 to get updated string "bbb"
+call OK wrefresh $win3
+call OK touchwin $win3
+call OK wrefresh $win3
+compare subwin2.chk

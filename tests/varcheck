@@ -20,14 +20,19 @@ call OK move 5 5
 call OK refresh
 call2 OK NCHAR in_wch
 check CHAR NCHAR
+compare varcheck1.chk
+
+call OK move 0 0
+call OK clear
+call OK refresh
+compare varcheck2.chk
 
 # check wide character string
-wchar CHARW ['a', 'b', 0x3401]
-call OK clear
-call OK move 0 0
-call OK refresh
+wchar CHARW ['\0\0\0a', 0x3401]
 call OK addwstr $CHARW
 call OK refresh
 call OK move 0 0
-call2 3 $CHARW innwstr 4
+call2 2 $CHARW innwstr 3
+compare varcheck3.chk
 
+# 9de2 e3a1 8190

@@ -1,0 +1,5 @@
+include start
+call "^C" key_name 0x03
+call "C" key_name 0x43
+call "^?" key_name 0x7f
+call "UNKNOWN KEY" key_name 0x205

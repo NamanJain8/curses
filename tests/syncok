@@ -1,0 +1,15 @@
+include window_hierarchy
+
+call OK syncok $win3 $TRUE
+
+call OK waddstr $win1 "aa"
+call OK untouchwin $win1
+call OK waddstr $win2 "bb"
+call OK untouchwin $win2
+call OK waddstr $win3 "cc"
+call OK untouchwin $win3
+call OK waddstr $win4 "dd"
+call OK untouchwin $win4
+
+# win1, win2, win3, must be touched
+call OK wrefresh $win1

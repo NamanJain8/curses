@@ -1,0 +1,16 @@
+include two_window
+
+# The two routines getsyx() and setsyx() are designed to be used by a library routine, which 
+# manipulates curses windows but does not want to change the current position of the program's
+# cursor. The library routine would call getsyx() at the beginning, do its manipulation of its own 
+# windows, do a wnoutrefresh() on its windows, call setsyx(), and then call doupdate().
+
+call OK waddstr $win1 "test\ntest"
+call OK wrefresh $win1
+# we are on win1 currently
+call3 OK 3 9 getsyx
+
+call OK waddstr $win2 "win2"
+call OK wnoutrefresh $win2
+call OK setsyx 3 9
+call OK doupdate

@@ -30,10 +30,3 @@ call OK waddstr $win2 "22222"
 call OK wmove $win2 2 0
 call OK waddstr $win2 "22222"
 call OK wrefresh $win1
-call OK wrefresh $win2
-compare delwin1.chk
-call OK delwin $win2
-call OK touchwin $win1
-call OK wrefresh $win1
-call OK wrefresh $win2
-compare /dev/null

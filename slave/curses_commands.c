@@ -1894,6 +1894,37 @@ cmd_getbegyx(int nargs, char **args)
 }
 
 void
+cmd_setsyx(int nargs, char **args)
+{
+    int y, x;
+
+    if (check_arg_count(nargs, 2) == 1)
+        return;
+
+    set_int(&y, args[0]);
+    set_int(&x, args[1]);
+
+    report_count(1);
+    setsyx(y, x);
+    report_return(OK);
+}
+
+void
+cmd_getsyx(int nargs, char **args)
+{
+    int y, x;
+
+    if (check_arg_count(nargs, 0) == 1)
+        return;
+
+    report_count(3);
+    getsyx(y, x);
+    report_return(OK);
+    report_int(y);
+    report_int(x);
+}
+
+void
 cmd_gettmode(int nargs, char **args)
 {
     if (check_arg_count(nargs, 0) == 1)

@@ -1,0 +1,5 @@
+include window_hierarchy
+call OK waddstr $win2 "aa"
+call OK wresize $win2 4 4
+call OK redrawwin $win2
+call OK wrefresh $win2

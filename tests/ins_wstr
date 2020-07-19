@@ -21,7 +21,7 @@ call2 10 10 getyx STDSCR
 compare ins_wstr2.chk
 
 # test special character processing [FAILING]
-# wchar NSTR ["A"*3, "\r", "B"*2]
-# call OK move 20 0
-# call OK ins_wstr $NSTR
-# call OK refresh
+wchar NSTR ["A"*3, "\r", "B"*2]
+call OK move 20 0
+call OK ins_wstr $NSTR
+call OK refresh
