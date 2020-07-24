@@ -2365,7 +2365,8 @@ cmd_mvvline(int nargs, char **args)
 void
 cmd_mvwhline(int nargs, char **args)
 {
-    int y, x, ch, n;
+    int y, x, n;
+    chtype *ch;
     WINDOW *win;
 
     if (check_arg_count(nargs, 5) == 1)
@@ -2374,11 +2375,11 @@ cmd_mvwhline(int nargs, char **args)
     set_win(&win, args[0]);
     set_int(&y, args[1]);
     set_int(&x, args[2]);
-    set_int(&ch, args[3]);
+    ch = (chtype *) args[3];
     set_int(&n, args[4]);
 
     report_count(1);
-    report_return(mvwhline(win, y, x, ch, n));
+    report_return(mvwhline(win, y, x, ch[0], n));
 }
 
 
@@ -3753,17 +3754,18 @@ void
 cmd_whline(int nargs, char **args)
 {
     WINDOW *win;
-    int ch, count;
+    int count;
+    chtype *ch;
 
     if (check_arg_count(nargs, 3) == 1)
         return;
 
     set_win(&win, args[0]);
-    set_int(&ch, args[1]);
+    ch = (chtype *) args[1];
     set_int(&count, args[2]);
 
     report_count(1);
-    report_return(whline(win, ch, count));
+    report_return(whline(win, ch[0], count));
 }
 
 
