@@ -153,6 +153,8 @@ struct command_def commands[] = {
 	{"getparyx", cmd_getparyx},
 	{"getmaxyx", cmd_getmaxyx},
 	{"getbegyx", cmd_getbegyx},
+	{"setsyx", cmd_setsyx},
+	{"getsyx", cmd_getsyx},
 	{"gettmode", cmd_gettmode},
 	{"getwin", cmd_getwin},
 	{"halfdelay", cmd_halfdelay},

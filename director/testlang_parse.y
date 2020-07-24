@@ -1637,8 +1637,8 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	if ((expected->attributes & WA_ATTRIBUTES) !=
 			(value->attributes & WA_ATTRIBUTES )){
 		if(check == 0)
-			errx(1, "cchar validation failed,attributes mismatch, expected %d,"
-			"received %d", expected->attributes | WA_ATTRIBUTES, value->attributes | WA_ATTRIBUTES);
+			errx(1, "cchar validation failed,attributes mismatch, expected 0x%x,"
+			"received 0x%x", expected->attributes & WA_ATTRIBUTES, value->attributes & WA_ATTRIBUTES);
 		else {
 			if(verbose)
 				fprintf(stderr, "Validated expected %s cchar"
@@ -1656,8 +1656,8 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	for(j = 0; j < expected->elements; j++) {
 		if(expected->vals[j] != value->vals[j]) {
 			if(check == 0)
-				errx(1, "cchar validation failed, vals mismatch, expected %d,"
-				"received %d", expected->vals[j], value->vals[j]);
+				errx(1, "cchar validation failed, vals mismatch, expected 0x%x,"
+				"received 0x%x", expected->vals[j], value->vals[j]);
 			else {
 				if(verbose)
 					fprintf(stderr, "Validated expected %s cchar"
