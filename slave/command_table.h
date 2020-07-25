@@ -176,6 +176,7 @@ struct command_def commands[] = {
 	{"keyname", cmd_keyname},
 	{"killchar", cmd_killchar},
 	{"leaveok", cmd_leaveok},
+	{"is_leaveok", cmd_is_leaveok},
 	{"meta", cmd_meta},
 	{"mvcur", cmd_mvcur},
 	{"mvderwin", cmd_mvderwin},

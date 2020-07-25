@@ -186,6 +186,7 @@ void cmd_keypad(int, char **);
 void cmd_keyname(int, char **);
 void cmd_killchar(int, char **);
 void cmd_leaveok(int, char **);
+void cmd_is_leaveok(int, char **);
 void cmd_meta(int, char **);
 void cmd_mvchgat(int, char **);
 void cmd_mvcur(int, char **);

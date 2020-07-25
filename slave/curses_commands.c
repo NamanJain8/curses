@@ -2235,6 +2235,19 @@ cmd_leaveok(int nargs, char **args)
     report_return(leaveok(win, flag));
 }
 
+void
+cmd_is_leaveok(int nargs, char **args)
+{
+    WINDOW *win;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    report_count(1);
+    report_int(is_leaveok(win));
+}
 
 void
 cmd_meta(int nargs, char **args)
