@@ -6177,3 +6177,47 @@ cmd_slk_wset(int nargs, char **args)
     report_count(1);
     report_return(slk_wset(labnum, label, justify));
 }
+
+
+void
+cmd_slk_init(int nargs, char **args)
+{
+    int fmt;
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_int(&fmt, args[0]);
+
+    report_count(1);
+    report_return(slk_init(fmt));
+}
+
+void
+cmd_use_env(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    report_count(1);
+    report_error("UNSUPPORTED");
+}
+
+void
+cmd_ripoffline(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    report_count(1);
+    report_error("UNSUPPORTED");
+}
+
+void
+cmd_filter(int nargs, char **args)
+{
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    report_count(1);
+    report_error("UNSUPPORTED");
+}

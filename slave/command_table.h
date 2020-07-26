@@ -34,10 +34,19 @@
 
 #include "curses_commands.h"
 
+static const char *restricted_commands[] = { "filter", "ripoffline", "use_env", "slk_init", "initscr", "newterm"
+};
+
+size_t nrcmds = sizeof(restricted_commands) / sizeof(char *);
+
 /*
- * Curses commands
+ * Curses commandse33
  */
 struct command_def commands[] = {
+	{"filter", cmd_filter},
+	{"ripoffline", cmd_ripoffline},
+	{"use_env", cmd_use_env},
+	{"slk_init", cmd_slk_init},
 	{"DRAIN", cmd_DRAIN},
 	{"addbytes", cmd_addbytes},
 	{"addch", cmd_addch},

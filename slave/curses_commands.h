@@ -37,15 +37,23 @@ struct command_def {
 	void (*func)(int, char **);
 };
 
-/*
- * prototypes for test commands
- */
-void cmd_DRAIN(int, char **); /* not a curses function */
 void set_int(int *, char *);
 void set_uint(unsigned int *, char *);
 void set_short(short *, char *);
 void set_win(WINDOW **, char *);
 void set_scrn(SCREEN **, char *);
+
+/*
+ * prototypes for test commands
+ */
+
+void cmd_DRAIN(int, char **); /* not a curses function */
+
+/* These functions can be called before initscr*/
+void cmd_filter(int, char **);
+void cmd_ripoffline(int, char **);
+void cmd_use_env(int, char **);
+void cmd_slk_init(int, char **);
 
 void cmd_addbytes(int, char **);
 void cmd_addch(int, char **);

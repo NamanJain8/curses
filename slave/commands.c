@@ -42,6 +42,7 @@
 
 extern int cmdpipe[2];
 extern int slvpipe[2];
+extern int initdone;
 
 static void report_type(data_enum_t);
 static void report_message(int, const char *);
@@ -54,10 +55,26 @@ void
 command_execute(char *func, int nargs, char **args)
 {
 	size_t i;
+	size_t j;
 
 	i = 0;
 	while (i < ncmds) {
 		if (strcasecmp(func, commands[i].name) == 0) {
+			if(!initdone){
+				j = 0;
+				while(j < nrcmds) {
+					if(strcasecmp(func, restricted_commands[j]) == 0){
+						if(strcasecmp(func, "initscr") == 0  || 
+							strcasecmp(func, "newterm") == 0)
+							initdone = 1;
+						commands[i].func(nargs, args);
+						return;
+					}
+					j++;
+				}
+				report_status("YOU NEED TO CALL INITSCR/NEWTERM FIRST");
+				return;
+			}
 			/* matched function */
 			commands[i].func(nargs, args);
 			return;
