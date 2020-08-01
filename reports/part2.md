@@ -35,11 +35,11 @@ These characters are used in `box_set()`, `border_set()`, etc. functions which I
 
 ### Testing and bug reports
 1. Added tests for following families of functions:
-		- Complex character routines.
-		- Line/box drawing routines.
-		- Pad routines.
-		- Window and sub-window operations. 
-		- Curson manipulation routines
+	- Complex character routines.
+	- Line/box drawing routines.
+	- Pad routines.
+	- Window and sub-window operations. 
+	- Curson manipulation routines
 2. Reported bugs (and possible fixes if I know):
 	- [lib/55454](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55454) `wredrawln()` in libcurses does not follow the sensible behaviour [*fixed*]
 	- [lib/55460](https://gnats.netbsd.org/cgi-bin/query-pr-single.pl?number=55460) copy error in  libcurses [*fixed*]
