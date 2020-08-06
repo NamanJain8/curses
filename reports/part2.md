@@ -1,4 +1,3 @@
-  
 # GSoC 2020 Second Evaluation Report: Curses Library Automated Testing
 
 My GSoC project under NetBSD involves the development of test framework of curses library. This blog report is second in series of blog reports; you can have a look at the [first report](https://blog.netbsd.org/tnf/entry/gsoc_reports_curses_library_automated). This report would cover the progress made in second coding phase along with providing some insights into the libcurses. 
@@ -17,11 +16,11 @@ struct cchar_t {
 In this coding period, I wrote tests for routines involving complex characters.
 
 ## Alternate character set
- When you print "BSD", you would send the hex-codes 42, 53, 44 to the terminal. Having a 8-bit ASCII code, limited the capability of graphic capable printers. To solve this, additional character sets were introduced. We can switch between the modes uisng escape sequence. One such character set for Special Graphics is used by curses for line drawing. In a shell you can type 
+ When you print "BSD", you would send the hex-codes 42, 53, 44 to the terminal. Capability of graphic capable printers was limited by 8-bit ASCII code. To solve this, additional character sets were introduced. We can switch between the modes using escape sequence. One such character set for Special Graphics is used by curses for line drawing. In a shell you can type 
  ```bash
  echo -e "\e(0j\e(b"
  ``` 
- to get a lowe-right corner glyph. This enables alternate character mode (`\e(`), prints a character(`j`) and disables alternate character mode (`\e(b`). One might wonder where this 'j' to 'Lower Right Corner glyph' comes from. You may see that mapping ("acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,) via 
+ to get a lower-right corner glyph. This enables alternate character mode (`\e(`), prints a character(`j`) and disables alternate character mode (`\e(b`). One might wonder where this 'j' to 'Lower Right Corner glyph' comes from. You may see that mapping ("acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,) via 
  ```bash
  infocmp -1 $TERM | grep acsc
  ````
