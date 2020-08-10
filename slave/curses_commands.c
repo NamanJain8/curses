@@ -3395,7 +3395,7 @@ cmd_waddnstr(int nargs, char **args)
     WINDOW *win;
     int count;
 
-    if (check_arg_count(nargs, 1) == 3)
+    if (check_arg_count(nargs, 3) == 1)
         return;
 
     set_win(&win, args[0]);

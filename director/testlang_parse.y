@@ -149,11 +149,11 @@ static void set_wchar(char *);
 static wchar_t	*add_to_vals(data_enum_t, void *);
 
 static const char *input_functions[] = {
-	"getch", "getnstr", "getstr", "mvgetnstr", "mvgetstr", "mvgetnstr",
-	"mvgetstr", "mvscanw", "mvwscanw", "scanw", "wgetch", "wgetnstr",
-	"wgetstr", "get_wch", "mvget_wch", "mvwget_wch", "wget_wch",
-	"getn_wstr", "get_wstr", "mvgetn_wstr", "mvget_wstr", "mvwgetn_wstr",
-	"mvwget_wstr", "wgetn_wstr", "wget_wstr"
+	"getch", "mvgetch", "mvwgetch", "wgetch", "getnstr", "getstr", "mvgetnstr",
+	"mvgetstr", "mvwgetnstr", "mvwgetstr", "wgetnstr", "wgetstr", "mvscanw",
+	"mvwscanw", "scanw", "wscanw", "get_wch", "mvget_wch", "mvwget_wch",
+	"wget_wch", "getn_wstr", "get_wstr", "mvgetn_wstr", "mvget_wstr",
+	"mvwgetn_wstr","mvwget_wstr", "wgetn_wstr", "wget_wstr"
 };
 
 static const unsigned ninput_functions =
