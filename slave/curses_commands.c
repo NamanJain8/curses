@@ -415,12 +415,14 @@ cmd_deleteln(int nargs, char **args)
 void
 cmd_echochar(int nargs, char **args)
 {
+    chtype *ch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    ch = (chtype *) args[0];
     /* XXX causes refresh */
     report_count(1);
-    report_return(echochar(args[0][0]));
+    report_return(echochar(ch[0]));
 }
 
 
@@ -566,11 +568,13 @@ cmd_innstr(int nargs, char **args)
 void
 cmd_insch(int nargs, char **args)
 {
+    chtype *ch;
     if (check_arg_count(nargs, 1) == 1)
         return;
 
+    ch = (chtype *) args[0];
     report_count(1);
-    report_return(insch(args[0][0]));
+    report_return(insch(ch[0]));
 }
 
 
@@ -1094,6 +1098,7 @@ cmd_mvwaddch(int nargs, char **args)
 {
     int y, x;
     WINDOW *win;
+    chtype *ch;
 
     if (check_arg_count(nargs, 4) == 1)
         return;
@@ -1101,9 +1106,10 @@ cmd_mvwaddch(int nargs, char **args)
     set_win(&win, args[0]);
     set_int(&y, args[1]);
     set_int(&x, args[2]);
+    ch = (chtype *) args[3];
 
     report_count(1);
-    report_return(mvwaddch(win, y, x, args[3][0]));
+    report_return(mvwaddch(win, y, x, ch[0]));
 }
 
 
@@ -1290,6 +1296,7 @@ cmd_mvwinsch(int nargs, char **args)
 {
     int y, x;
     WINDOW *win;
+    chtype *ch;
 
     if (check_arg_count(nargs, 4) == 1)
         return;
@@ -1297,9 +1304,10 @@ cmd_mvwinsch(int nargs, char **args)
     set_win(&win, args[0]);
     set_int(&y, args[1]);
     set_int(&x, args[2]);
+    ch = (chtype *) args[3];
 
 	report_count(1);
-    report_int(mvwinsch(win, y, x, args[3][0]));
+    report_return(mvwinsch(win, y, x, ch[0]));
 }
 
 
@@ -3793,7 +3801,7 @@ cmd_winch(int nargs, char **args)
     set_win(&win, args[0]);
 
     report_count(1);
-    report_int(winch(win));
+    report_byte(winch(win));
 }
 
 
@@ -3859,16 +3867,16 @@ void
 cmd_winsch(int nargs, char **args)
 {
     WINDOW *win;
-    int ch;
+    chtype *ch;
 
     if (check_arg_count(nargs, 2) == 1)
         return;
 
     set_win(&win, args[0]);
-    set_int(&ch, args[1]);
+    ch = (chtype *) args[1];
 
     report_count(1);
-    report_return(winsch(win, ch));
+    report_return(winsch(win, ch[0]));
 }
 
 
@@ -6215,9 +6223,10 @@ cmd_ripoffline(int nargs, char **args)
 void
 cmd_filter(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    if (check_arg_count(nargs, 0) == 1)
         return;
 
     report_count(1);
-    report_error("UNSUPPORTED");
+    filter();
+    report_return(OK);
 }
