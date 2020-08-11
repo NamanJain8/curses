@@ -191,6 +191,7 @@ void cmd_is_linetouched(int, char **);
 void cmd_is_wintouched(int, char **);
 void cmd_keyok(int, char **);
 void cmd_keypad(int, char **);
+void cmd_is_keypad(int, char **);
 void cmd_keyname(int, char **);
 void cmd_killchar(int, char **);
 void cmd_leaveok(int, char **);

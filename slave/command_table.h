@@ -182,6 +182,7 @@ struct command_def commands[] = {
 	{"is_wintouched", cmd_is_wintouched},
 	{"keyok", cmd_keyok},
 	{"keypad", cmd_keypad},
+	{"is_keypad", cmd_is_keypad},
 	{"keyname", cmd_keyname},
 	{"killchar", cmd_killchar},
 	{"leaveok", cmd_leaveok},

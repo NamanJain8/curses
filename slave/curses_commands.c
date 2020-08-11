@@ -2207,6 +2207,19 @@ cmd_keypad(int nargs, char **args)
     report_return(keypad(win, flag));
 }
 
+void
+cmd_is_keypad(int nargs, char **args)
+{
+    WINDOW *win;
+
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    report_count(1);
+    report_int(is_keypad(win));
+}
 
 void
 cmd_keyname(int nargs, char **args)
@@ -5563,12 +5576,12 @@ cmd_getcchar(int nargs, char **args)
 void
 cmd_key_name(int nargs, char **args)
 {
-    int w;
+    wchar_t w;
 
     if (check_arg_count(nargs, 1) == 1)
         return;
 
-    set_int(&w, args[0]);
+    w = *((wchar_t *) args[0]);
 
     report_count(1);
     report_status(key_name(w));
