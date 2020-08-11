@@ -27,6 +27,8 @@ usage() {
 	echo
 }
 
+rm -rf /tmp/*
+
 #
 ARGS="-T ${BASEDIR} -I ${INCLUDE_PATH} -C ${CHECK_PATH}"
 #

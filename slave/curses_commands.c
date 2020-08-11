@@ -2925,7 +2925,7 @@ cmd_putwin(int nargs, char **args)
 
     set_win(&win, args[0]);
 
-    if ((fp = fopen(args[1], "rw")) == NULL) {
+    if ((fp = fopen(args[1], "w")) == NULL) {
         report_count(1);
         report_error("BAD FILE_ARGUMENT");
         return;
@@ -2933,6 +2933,7 @@ cmd_putwin(int nargs, char **args)
 
     report_count(1);
     report_return(putwin(win, fp));
+    fclose(fp);
 }
 
 
