@@ -40,14 +40,6 @@
 #include "curses_commands.h"
 
 void
-cmd_DRAIN(int nargs, char **args)
-{
-    while (getch() != ERR);
-    report_count(1);
-    report_return(OK);
-}
-
-void
 set_int(int *x, char *arg)
 {
     if( sscanf(arg, "%d", x) == 0) {
@@ -95,6 +87,21 @@ set_scrn(SCREEN **x, char *arg)
         report_error("BAD ARGUMENT");
         return;
     }
+}
+
+
+void
+cmd_DRAIN(int nargs, char **args)
+{
+    WINDOW *win;
+    if (check_arg_count(nargs, 1) == 1)
+        return;
+
+    set_win(&win, args[0]);
+
+    while (wgetch(win) != ERR);
+    report_count(1);
+    report_return(OK);
 }
 
 void
