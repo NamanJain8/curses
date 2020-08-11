@@ -4352,7 +4352,7 @@ cmd_wchgat(int nargs, char **args)
     int n, attr;
     short colour;
 
-    if (check_arg_count(nargs, 4) == 1)
+    if (check_arg_count(nargs, 5) == 1)
         return;
 
     set_win(&win, args[0]);
@@ -4392,7 +4392,7 @@ cmd_mvwchgat(int nargs, char **args)
     int y, x, n, attr;
     short colour;
 
-    if (check_arg_count(nargs, 6) == 1)
+    if (check_arg_count(nargs, 7) == 1)
         return;
 
     set_win(&win, args[0]);
