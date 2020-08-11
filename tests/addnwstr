@@ -11,7 +11,7 @@ compare addnwstr1.chk
 wchar CR ["\r", "a", "\r", "b", "c"]
 call OK addnwstr $CR 4
 call OK refresh
-compare addwstr2.chk
+compare addnwstr2.chk
 
 # test wrapping
 call OK move 2 77

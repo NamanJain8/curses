@@ -20,6 +20,7 @@ call OK refresh
 call2 10 10 getyx STDSCR
 compare ins_wstr2.chk
 
+# lib/55433: Bug in special character handling of ins_wstr() of libcurses
 # test special character processing [FAILING]
 # wchar NSTR ["A"*3, "\r", "B"*2]
 # call OK move 20 0

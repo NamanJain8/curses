@@ -11,7 +11,7 @@ compare mvaddnwstr1.chk
 wchar CR ["\r", "a", "\r", "b", "c"]
 call OK mvaddnwstr 0 12 $CR 4
 call OK refresh
-compare addwstr2.chk
+compare addnwstr2.chk
 
 # test wrapping
 call OK mvaddnwstr 2 77 $WSTR -1

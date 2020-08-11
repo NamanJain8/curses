@@ -4910,10 +4910,10 @@ cmd_mvwins_nwstr(int nargs, char **args)
     if (check_arg_count(nargs, 5) == 1)
         return;
 
-    wstr = (wchar_t *) args[0];
+    set_win(&win, args[0]);
     set_int(&y, args[1]);
     set_int(&x, args[2]);
-    set_win(&win, args[3]);
+    wstr = (wchar_t *) args[3];
     set_int(&n, args[4]);
 
     report_count(1);
@@ -5143,7 +5143,7 @@ cmd_mvwgetn_wstr(int nargs, char **args)
     set_int(&n, args[3]);
 
     report_count(2);
-    report_int(mvwgetn_wstr(win, y, x, wstr, n));
+    report_return(mvwgetn_wstr(win, y, x, wstr, n));
     report_wstr(wstr);
 }
 
@@ -5163,7 +5163,7 @@ cmd_mvwget_wstr(int nargs, char **args)
     set_int(&x, args[2]);
 
     report_count(2);
-    report_int(mvwget_wstr(win, y, x, wstr));
+    report_return(mvwget_wstr(win, y, x, wstr));
     report_wstr(wstr);
 }
 
@@ -5182,7 +5182,7 @@ cmd_wgetn_wstr(int nargs, char **args)
     set_int(&n, args[1]);
 
     report_count(2);
-    report_int(wgetn_wstr(win, wstr, n));
+    report_return(wgetn_wstr(win, wstr, n));
     report_wstr(wstr);
 }
 
@@ -5199,7 +5199,7 @@ cmd_wget_wstr(int nargs, char **args)
     set_win(&win, args[0]);
 
     report_count(2);
-    report_int(wget_wstr(win, wstr));
+    report_return(wget_wstr(win, wstr));
     report_wstr(wstr);
 }
 
