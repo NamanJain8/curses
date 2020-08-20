@@ -4752,11 +4752,17 @@ cmd_echo_wchar(int nargs, char **args)
 void
 cmd_wecho_wchar(int nargs, char **args)
 {
-    if (check_arg_count(nargs, 1) == 1)
+    WINDOW *win;
+    cchar_t *ch;
+
+    if (check_arg_count(nargs, 2) == 1)
         return;
 
+    set_win(&win, args[0]);
+    ch = (cchar_t *) args[1];
+
     report_count(1);
-    report_error("UNSUPPORTED");
+    report_return(wecho_wchar(win, ch));
 }
 
 
