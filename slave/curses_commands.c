@@ -3709,16 +3709,16 @@ void
 cmd_wechochar(int nargs, char **args)
 {
     WINDOW *win;
-    int ch;
+    chtype *ch;
 
     if (check_arg_count(nargs, 2) == 1)
         return;
 
     set_win(&win, args[0]);
-    set_int(&ch, args[1]);
+    ch = (chtype *) args[1];
 
     report_count(1);
-    report_return(wechochar(win, ch));
+    report_return(wechochar(win, ch[0]));
 }
 
 
