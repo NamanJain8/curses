@@ -1,0 +1,8 @@
+include start
+call OK has_key 97
+
+
+
+# MISSING
+# has_key, set_escdelay, mvadd_wch, mvwadd_wch, [mv][w]get_wch, [mv][w]insstr, nl/nonl, intrflush, noqiflush, qiflush, baudrate, def_prog_mode, reset_prog_mode, def_shell_mode, reset_shell_mode, echo, noecho, raw, noraw, typeahead, savetty, resetty, term_attrs, no_color_attributes, syncok, wsyncup, wsyncdown
+
