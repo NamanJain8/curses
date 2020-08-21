@@ -2132,11 +2132,14 @@ underscore_body()
 
 atf_init_test_cases()
 {
+	# testframe utility functions
 	atf_add_test_case startup
 	atf_add_test_case window
 	atf_add_test_case start_slk
 	atf_add_test_case window_hierarchy
 	atf_add_test_case two_window
+
+	# curses add characters to window routines
 	atf_add_test_case addch
 	atf_add_test_case waddch
 	atf_add_test_case mvaddch
@@ -2166,6 +2169,8 @@ atf_init_test_cases()
 	atf_add_test_case mvwaddnstr
 	atf_add_test_case add_wch
 	atf_add_test_case wadd_wch
+
+	# curses input stream routines
 	atf_add_test_case getch
 	atf_add_test_case wgetch
 	atf_add_test_case define_key
@@ -2194,6 +2199,8 @@ atf_init_test_cases()
 	atf_add_test_case mvwgetn_wstr
 	atf_add_test_case mvget_wstr
 	atf_add_test_case mvwget_wstr
+
+	# curses read screen contents routines
 	atf_add_test_case inch
 	atf_add_test_case winch
 	atf_add_test_case mvinch
@@ -2216,6 +2223,8 @@ atf_init_test_cases()
 	atf_add_test_case mvwinnwstr
 	atf_add_test_case mvinwstr
 	atf_add_test_case mvwinwstr
+
+	# curses insert character to window routines
 	atf_add_test_case insch
 	atf_add_test_case winsch
 	atf_add_test_case mvinsch
@@ -2232,8 +2241,12 @@ atf_init_test_cases()
 	atf_add_test_case mvwins_nwstr
 	atf_add_test_case mvins_wstr
 	atf_add_test_case mvwins_wstr
+
+	# curses delete characters routines
 	atf_add_test_case delch
 	atf_add_test_case mvdelch
+
+	# curses terminal manipulation routines
 	atf_add_test_case beep
 	atf_add_test_case flash
 	atf_add_test_case curs_set
@@ -2250,18 +2263,26 @@ atf_init_test_cases()
 	atf_add_test_case meta
 	atf_add_test_case cbreak
 	atf_add_test_case nocbreak
+
+	# curses general attribute manipulation routines
 	atf_add_test_case attributes
 	atf_add_test_case wattributes
 	atf_add_test_case getattrs
 	atf_add_test_case color_set
 	atf_add_test_case wcolor_set
 	atf_add_test_case termattrs
+
+	# curses on-screen attribute manipulation routines
 	atf_add_test_case chgat
 	atf_add_test_case wchgat
 	atf_add_test_case mvchgat
 	atf_add_test_case mvwchgat
+
+	# curses standout attribute manipulation routines
 	atf_add_test_case standout
 	atf_add_test_case wstandout
+
+	# curses color manipulation routines
 	atf_add_test_case has_colors
 	atf_add_test_case can_change_color
 	atf_add_test_case start_color
@@ -2269,15 +2290,23 @@ atf_init_test_cases()
 	atf_add_test_case init_color
 	atf_add_test_case color_content
 	atf_add_test_case assume_default_colors
+
+	# curses clear window routines
 	atf_add_test_case clear
 	atf_add_test_case clearok
+
+	# curses terminal update routines
 	atf_add_test_case doupdate
 	atf_add_test_case immedok
 	atf_add_test_case leaveok
+
+	# curses window scrolling routines
 	atf_add_test_case wscrl
 	atf_add_test_case scroll
 	atf_add_test_case setscrreg
 	atf_add_test_case wsetscrreg
+
+	# curses window modification routines
 	atf_add_test_case touchline
 	atf_add_test_case touchoverlap
 	atf_add_test_case touchwin
@@ -2287,7 +2316,11 @@ atf_init_test_cases()
 	atf_add_test_case is_wintouched
 	atf_add_test_case redrawwin
 	atf_add_test_case wredrawln
+
+	# curses soft label key routines
 	atf_add_test_case slk
+
+	# curses draw lines on windows routines
 	atf_add_test_case hline
 	atf_add_test_case whline
 	atf_add_test_case mvhline
@@ -2297,8 +2330,12 @@ atf_init_test_cases()
 	atf_add_test_case whline_set
 	atf_add_test_case vline_set
 	atf_add_test_case wvline_set
+
+	# curses pad routines
 	atf_add_test_case pad
 	atf_add_test_case pechochar
+
+	# curses cursor and window location and positioning routines
 	atf_add_test_case cursor
 	atf_add_test_case getcurx
 	atf_add_test_case getmaxx
@@ -2307,6 +2344,8 @@ atf_init_test_cases()
 	atf_add_test_case getbegy
 	atf_add_test_case getbegx
 	atf_add_test_case mvcur
+
+	# curses window routines
 	atf_add_test_case copywin
 	atf_add_test_case dupwin
 	# atf_add_test_case delwin [FAILING]
@@ -2317,20 +2356,30 @@ atf_init_test_cases()
 	atf_add_test_case overlay
 	atf_add_test_case overwrite
 	atf_add_test_case getwin
+
+	# curses background attribute manipulation routines
 	atf_add_test_case background
 	atf_add_test_case bkgdset
 	atf_add_test_case getbkgd
+
+	# curses border drawing routines
 	atf_add_test_case box
 	atf_add_test_case box_set
 	atf_add_test_case wborder
 	atf_add_test_case border_set
 	atf_add_test_case wborder_set
+
+	# curses insert or delete lines routines
 	atf_add_test_case deleteln
 	atf_add_test_case insertln
 	atf_add_test_case insdelln
+
+	# curses print formatted strings on windows routines
 	atf_add_test_case wprintw
 	atf_add_test_case mvprintw
 	atf_add_test_case mvscanw
+
+	# curses underscore attribute manipulation routines
 	atf_add_test_case underscore
 }
 
