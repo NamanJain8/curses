@@ -58,26 +58,34 @@ for (_, _, fname) in walk("../tests"):
     break
 print("Total %d files"%(len(files)))
 
-files = Diff(files, intersect)
+tests = []
+with open("../headers.sh", "r+") as fp:
+    for line in fp.readlines():
+        if re.match(regex_header, line):
+            tests.append(line.split(' ')[-1][:-1])
 
-test_headers = []
-test_lines = []
+print(Diff(files, tests))
 
-header = "atf_test_case %s\n%s_head()\n{\n    atf_set \"descr\" \"\"\n}\n%s_body()\n{\n    h_run %s\n}"
-line = "atf_add_test_case %s"
+# files = Diff(files, intersect)
 
-print(bcolors.OKBLUE + header%(files[-1], files[-1], files[-1], files[-1]) + bcolors.ENDC)
-print(bcolors.OKBLUE + line%(files[3]) + bcolors.ENDC)
+# test_headers = []
+# test_lines = []
 
-for f in files:
-    test_headers.append(header%(f,f,f,f))
-    test_lines.append(line%(f))
+# header = "atf_test_case %s\n%s_head()\n{\n    atf_set \"descr\" \"\"\n}\n%s_body()\n{\n    h_run %s\n}"
+# line = "atf_add_test_case %s"
 
-# print to file
+# print(bcolors.OKBLUE + header%(files[-1], files[-1], files[-1], files[-1]) + bcolors.ENDC)
+# print(bcolors.OKBLUE + line%(files[3]) + bcolors.ENDC)
 
-with open("headers", "w+") as fp:
-    for header in test_headers:
-        fp.write(header+"\n"*2)
-with open("lines", "w+") as fp:
-    for line in test_lines:
-        fp.write(line+"\n")
+# for f in files:
+#     test_headers.append(header%(f,f,f,f))
+#     test_lines.append(line%(f))
+
+# # print to file
+
+# with open("headers", "w+") as fp:
+#     for header in test_headers:
+#         fp.write(header+"\n"*2)
+# with open("lines", "w+") as fp:
+#     for line in test_lines:
+#         fp.write(line+"\n")
