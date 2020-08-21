@@ -88,8 +88,9 @@ static unsigned nvals;		/* number of wchars */
 #define WRITE_PIPE 1
 
 const char *enum_names[] = {
-	"unused", "static", "numeric", "string", "byte", "cchar", "wchar", "ERR", "OK", "NULL",
-	"not NULL", "variable", "reference", "returns count", "slave error"
+	"unused", "static", "numeric", "string", "byte", "cchar", "wchar", "ERR",
+	"OK", "NULL", "not NULL", "variable", "reference", "returns count",
+	"slave error"
 };
 
 typedef struct {
@@ -273,9 +274,6 @@ check		: CHECK var returns eol {
 	var_t *vptr;
 
 	if (command.returns[0].data_index == -1)
-		/* This code is unreachable, assign_rets() assigns
-		 * the variable var if not defined.
-		 */
 		err(1, "Undefined variable in check statement, line %zu"
 		    " of file %s", line, cur_file);
 
@@ -346,7 +344,6 @@ check		: CHECK var returns eol {
 		break;
 
 	case data_cchar:
-		fprintf(stderr, "%d\n", ((cchar_t *) command.returns[1].data_value)->elements);
 		validate_cchar(&vars[command.returns[0].data_index].cchar,
 			(cchar_t *) command.returns[1].data_value, 0);
 		break;
@@ -364,6 +361,7 @@ check		: CHECK var returns eol {
 
 	init_parse_variables(0);
  }
+	;
 
 delay		: DELAY numeric eol {
 	/* set the inter-character delay */
@@ -989,19 +987,18 @@ compare_streams(char *filename, bool discard)
 	if (strlcat(check_file, filename, sizeof(check_file))
 	    >= sizeof(check_file))
 		err(2, "Path to check file path overflowed");
-	
+
 	int create_check_file = 0;
 
 	if((check_file_flag == (GEN_CHECK_FILE | FORCE_GEN)))
 		create_check_file = 1;
-	else if ((check_fd = open(check_file, O_RDONLY, 0)) < 0){ 
+	else if ((check_fd = open(check_file, O_RDONLY, 0)) < 0){
 		if(check_file_flag & GEN_CHECK_FILE)
 			create_check_file = 1;
 		else
 			err(2, "failed to open file %s line %zu of file %s",
 				check_file, line, cur_file);
 	}
-	
 
 	if(create_check_file)
 		if ((check_fd = open(check_file, O_WRONLY | O_CREAT, 0644)) < 0){
@@ -1046,7 +1043,7 @@ compare_streams(char *filename, bool discard)
 			if (saved_output.count == 0)
 				nfd = 2;
 		} else {
-			int revent = (create_check_file == 1) ? POLLOUT:POLLIN; 
+			int revent = (create_check_file == 1) ? POLLOUT:POLLIN;
 			if (fds[0].revents & revent) {
 				if (read(master, &data, 1) < 1)
 					err(2, "Bad read on slave pty");
@@ -1091,8 +1088,8 @@ compare_streams(char *filename, bool discard)
 	}
 
 	/*
-	 * if creating a check file, there shouldn't be 
-	 * anymore saved output 
+	 * if creating a check file, there shouldn't be
+	 * anymore saved output
 	 */
 	if (saved_output.count > 0){
 		if(create_check_file)
@@ -1420,6 +1417,7 @@ validate(int i, void *data)
 
 		response = byte_response->data_value;
 	}
+
 	switch (command.returns[i].data_type) {
 	case data_err:
 		validate_type(data_err, byte_response, 0);
@@ -1478,7 +1476,7 @@ validate_reference(int i, void *data)
 		fprintf(stderr,
 		    "%s: return type of %s, value %s \n", __func__,
 		    enum_names[varp->type],
-		    (varp->type != data_cchar && varp->type != data_wchar) 
+		    (varp->type != data_cchar && varp->type != data_wchar)
 			? (const char *)varp->value : "-");
 	}
 
@@ -1619,8 +1617,8 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	 */
 	if ((expected->elements != value->elements)){
 		if(check == 0)
-			errx(1, "cchar validation failed, elements count mismatch, expected %d,"
-			"received %d", expected->elements, value->elements);
+			errx(1, "cchar validation failed, elements count mismatch, "
+			"expected %d, received %d", expected->elements, value->elements);
 		else {
 			if(verbose)
 				fprintf(stderr, "Validated expected %s cchar"
@@ -1637,8 +1635,9 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	if ((expected->attributes & WA_ATTRIBUTES) !=
 			(value->attributes & WA_ATTRIBUTES )){
 		if(check == 0)
-			errx(1, "cchar validation failed,attributes mismatch, expected 0x%x,"
-			"received 0x%x", expected->attributes & WA_ATTRIBUTES, value->attributes & WA_ATTRIBUTES);
+			errx(1, "cchar validation failed,attributes mismatch, expected "
+			"0x%x, received 0x%x", expected->attributes & WA_ATTRIBUTES,
+			value->attributes & WA_ATTRIBUTES);
 		else {
 			if(verbose)
 				fprintf(stderr, "Validated expected %s cchar"
@@ -1656,7 +1655,7 @@ validate_cchar(cchar_t *expected, cchar_t *value, int check)
 	for(j = 0; j < expected->elements; j++) {
 		if(expected->vals[j] != value->vals[j]) {
 			if(check == 0)
-				errx(1, "cchar validation failed, vals mismatch, expected 0x%x,"
+				errx(1, "cchar validation failed, vals mismatch,expected 0x%x,"
 				"received 0x%x", expected->vals[j], value->vals[j]);
 			else {
 				if(verbose)
@@ -1702,8 +1701,8 @@ validate_wchar(wchar_t *expected, wchar_t *value, int check)
 	 */
 	if (len1 != len2){
 		if(check == 0)
-			errx(1, "wchar string validation failed, length mismatch, expected %d,"
-			"received %d", len1, len2);
+			errx(1, "wchar string validation failed, length mismatch, "
+			"expected %d, received %d", len1, len2);
 		else {
 			if(verbose)
 				fprintf(stderr, "Validated expected %s wchar"

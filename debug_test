@@ -18,15 +18,19 @@ usage() {
 	echo "         by setting the trace mask in the environment before calling the"
 	echo "         The trace file output goes to /tmp/ctrace"
 	echo "         script."
-	echo "    -f : Specify the file name for curses tracing the default is"
+	echo "    -F : Specify the file name for curses tracing the default is"
 	echo "         ${CURSES_TRACE_FILE}"
 	echo "	  -L : Add the argument as a prefix to LD_LIBRARY_PATH to"
 	echo "	       use an alternate libcurses version"
 	echo "    -s : Specify the slave command.  Defaults to \"../slave/slave\""
 	echo "    -v : Enable verbose output"
+	echo "    -g : Enable check file generation if the file does not exists"
+	echo "    -f : Forces check file generation if -g flag is set"
 	echo
 }
 
+# This is needed for getwin/putwin test case and /tmp can be used for any file
+# related tests.
 rm -rf /tmp/*
 
 #
@@ -43,7 +47,7 @@ do
 	    export CURSES_TRACE_MASK
 	    ;;
 
-	f)
+	F)
 	    CURSES_TRACE_FILE=${OPTARG}
 	    ;;
 
@@ -62,6 +66,10 @@ do
 	g)
 	    ARGS="-g ${ARGS}"
 		;;
+
+	f)
+	ARGS="-f ${ARGS}"
+	;;
 
 	\?)
 	    usage

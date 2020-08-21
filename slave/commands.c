@@ -54,19 +54,21 @@ static void report_message(int, const char *);
 void
 command_execute(char *func, int nargs, char **args)
 {
-	size_t i;
-	size_t j;
+	size_t i, j;
 
 	i = 0;
 	while (i < ncmds) {
 		if (strcasecmp(func, commands[i].name) == 0) {
+			/* Check only restricted set of functions is called before
+			 * initscr/newterm */
 			if(!initdone){
 				j = 0;
 				while(j < nrcmds) {
 					if(strcasecmp(func, restricted_commands[j]) == 0){
-						if(strcasecmp(func, "initscr") == 0  || 
+						if(strcasecmp(func, "initscr") == 0  ||
 							strcasecmp(func, "newterm") == 0)
 							initdone = 1;
+						/* matched function */
 						commands[i].func(nargs, args);
 						return;
 					}
@@ -246,16 +248,15 @@ report_nstr(chtype *string)
 }
 
 /*
- * Report a cchar back to the director via the command pipe.
+ * Report a cchar_t back to the director via the command pipe.
  */
 void
 report_cchar(cchar_t c)
 {
 	int len, type;
-
 	len = sizeof(cchar_t);
-
 	type = data_cchar;
+
 	if (write(slvpipe[WRITE_PIPE], &type, sizeof(int)) < 0)
 		err(1, "%s: command pipe write for status type failed",
 		    __func__);
@@ -270,7 +271,7 @@ report_cchar(cchar_t c)
 }
 
 /*
- * Report a string of chtype back to the director via the command pipe.
+ * Report a wchar_t back to the director via the command pipe.
  */
 void
 report_wchar(wchar_t ch)
@@ -284,7 +285,7 @@ report_wchar(wchar_t ch)
 
 
 /*
- * Report a wchar back to the director via the command pipe.
+ * Report a string of wchar_t back to the director via the command pipe.
  */
 void
 report_wstr(wchar_t *wstr)

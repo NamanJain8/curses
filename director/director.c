@@ -105,8 +105,8 @@ usage(void)
 	    "commandfile\n", getprogname());
 	fprintf(stderr, " where:\n");
 	fprintf(stderr, "    -v enables verbose test output\n");
-	fprintf(stderr, "    -g enables generation of check file if does not exist\n");
-	fprintf(stderr, "    -f forces generation of check file if -g flag enabled\n");
+	fprintf(stderr, "    -g enables check file generation if does not exist\n");
+	fprintf(stderr, "    -f forces check file generation if -g flag is set\n");
 	fprintf(stderr, "    -T is a directory containing the terminfo.cdb "
 	    "file, or a file holding the terminfo description n");
 	fprintf(stderr, "    -s is the path to the slave executable\n");
