@@ -83,6 +83,16 @@ two_window_body()
 	h_run two_window
 }
 
+atf_test_case varcheck
+varcheck_head()
+{
+	atf_set "descr" "Checks if the testframe CHECK command works"
+}
+varcheck_body()
+{
+	h_run varcheck
+}
+
 ##########################################
 # curses add characters to window routines
 ##########################################
@@ -659,6 +669,16 @@ mvwget_wstr_head()
 mvwget_wstr_body()
 {
     h_run mvwget_wstr en_US.UTF-8
+}
+
+atf_test_case get_wch
+get_wch_head()
+{
+	atf_set "descr" "Checks reading a complex character through input queue"
+}
+get_wch_body()
+{
+	h_run get_wch en_US.UTF-8
 }
 
 ##########################################
@@ -2123,11 +2143,21 @@ mvscanw_body()
 atf_test_case underscore
 underscore_head()
 {
-	atf_set "descr" "Manipulate underscore attribute on stdscr or window"
+	atf_set "descr" "Manipulate underscore attribute on stdscr"
 }
 underscore_body()
 {
 	h_run underscore
+}
+
+atf_test_case wunderscore
+wunderscore_head()
+{
+	atf_set "descr" "Manipulate underscore attribute on window"
+}
+wunderscore_body()
+{
+	h_run wunderscore
 }
 
 atf_init_test_cases()
@@ -2138,6 +2168,7 @@ atf_init_test_cases()
 	atf_add_test_case start_slk
 	atf_add_test_case window_hierarchy
 	atf_add_test_case two_window
+	atf_add_test_case varcheck
 
 	# curses add characters to window routines
 	atf_add_test_case addch
@@ -2199,6 +2230,7 @@ atf_init_test_cases()
 	atf_add_test_case mvwgetn_wstr
 	atf_add_test_case mvget_wstr
 	atf_add_test_case mvwget_wstr
+	atf_add_test_case get_wch
 
 	# curses read screen contents routines
 	atf_add_test_case inch
@@ -2381,5 +2413,6 @@ atf_init_test_cases()
 
 	# curses underscore attribute manipulation routines
 	atf_add_test_case underscore
+	atf_add_test_case wunderscore
 }
 
