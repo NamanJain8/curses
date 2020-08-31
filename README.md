@@ -31,12 +31,12 @@ This work can be merged into organisation repository [https://github.com/NetBSD/
 
 This project involved:
  1. Improvement in testframework:
-		 - Automation of the checkfile generation.
-		 - Enhnacement of support for complex character
-		 - Addition of small features and code refactoring
+ 	- Automation of the checkfile generation.
+	- Enhnacement of support for complex character
+	- Addition of small features and code refactoring
  2. Testing and bug reports:
-		- Tests for a family of routines like wide character, complex character, line drawing, box drawing, pad, window operations, cursor manipulations, soft label keys, input-output stream, and the ones involving their interactions.
-		- Raising a bunch of Problem Report (PR) under `lib` category some of which have been fixed. The list of PRs raised can be found [here](https://github.com/NamanJain8/curses/blob/master/reports/problem-reports.md)
+	- Tests for a family of routines like wide character, complex character, line drawing, box drawing, pad, window operations, cursor manipulations, soft label keys, input-output stream, and the ones involving their interactions.
+	- Raising a bunch of Problem Report (PR) under `lib` category some of which have been fixed. The list of PRs raised can be found [here](https://github.com/NamanJain8/curses/blob/master/reports/problem-reports.md)
 
 ## Future Work
 - The current testframe supports complex character, but the support needs to be extended for its string. This will enable testing of [mv][w]add_wch[n]str, [mv][w]in_wchstr family of routines.
